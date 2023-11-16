@@ -13,7 +13,8 @@ public class DoorbellServer {
         server.setConnectors(new Connector[] {connector});
 	ServletHandler servletHandler = new ServletHandler();
         server.setHandler(servletHandler);
-	servletHandler.addServletWithMapping(DoorbellServlet.class, "/");
+	servletHandler.addServletWithMapping(DoorbellServlet.class, "/bell");
+	servletHandler.addServletWithMapping(StatusServlet.class, "/*");
         server.start();
     }
 }
