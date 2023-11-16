@@ -7,10 +7,12 @@ import javazoom.jl.player.*;
  * Hello world!
  *
  */
-public class App 
-{
-    public static void main( String[] args )
-    {
+public class App {
+    public static void main(String args[]) {
+	System.out.println("Hi there!");
+    }
+
+    public void play() {
         try {
             FileInputStream fis = new FileInputStream(new File("demo.mp3"));
             Player p = new Player(fis);
