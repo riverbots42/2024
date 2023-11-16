@@ -8,8 +8,20 @@ import javazoom.jl.player.*;
  *
  */
 public class App {
+    public DoorbellServer server;
+
+    public App() {
+        super();
+        this.server = new DoorbellServer();
+    }
+
     public static void main(String args[]) {
-	System.out.println("Hi there!");
+        App app = new App();
+	try {
+	    app.server.start();
+	} catch(Exception E) {
+            System.out.println(E.toString());
+	}
     }
 
     public void play() {
