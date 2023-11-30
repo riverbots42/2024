@@ -1,0 +1,10 @@
+[Unit]
+Description=Doorbell Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/java -jar /usr/local/bin/doorbell-1.0.jar
+
+[Install]
+WantedBy=multi-user.target

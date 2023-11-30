@@ -5,7 +5,7 @@ import javazoom.jl.player.*;
 
 /**
  *  HTTP Server to Provide a single /bell API that plays doorbell.mp3.
- *  When this is running, it will provide two APIs at http://localhost:8080/:
+ *  When this is running, it will provide two APIs at http://localhost:8081/:
  *      /bell               - Play an MP3, return a JSON status message that's basically "ok" or "error".
  *      / (Everything else) - Return an "ok" status message.
  *  Main itself is pretty simple; it just instantiates a DoorbellServer (itself a subclass of HttpServlet) and starts it.

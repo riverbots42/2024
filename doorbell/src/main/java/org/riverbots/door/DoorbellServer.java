@@ -5,7 +5,7 @@ import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.servlet.*;
 
 /**
- * Class to create/start the HTTP Servlet engine.  Basically connect it to :8080 and add the /bell and /* mappings.
+ * Class to create/start the HTTP Servlet engine.  Basically connect it to :8081 and add the /bell and /* mappings.
  */
 public class DoorbellServer {
     private Server server;
@@ -14,7 +14,7 @@ public class DoorbellServer {
         server = new Server();
 	// A connector is required to bind the server to a port on the computer.
         ServerConnector connector = new ServerConnector(server);
-        connector.setPort(8080);
+        connector.setPort(8081);
         server.setConnectors(new Connector[] {connector});
 	// The handler is basically the "OK, I got a request, who do I send it to?" answer.
 	ServletHandler servletHandler = new ServletHandler();
