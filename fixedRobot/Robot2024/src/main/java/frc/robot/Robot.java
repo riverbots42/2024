@@ -19,20 +19,23 @@ public class Robot extends TimedRobot {
   private Joystick m_leftStick;
   private Joystick m_rightStick;
 
-  private final PWMSparkMax m_leftMotor = new PWMSparkMax(0);
-  private final PWMSparkMax m_rightMotor = new PWMSparkMax(1);
+  private final PWMSparkMax m_frontLeftMotor = new PWMSparkMax(0);
+  private final PWMSparkMax m_rearLeftMotor = new PWMSparkMax(1);
+  private final PWMSparkMax m_frontRightMotor = new PWMSparkMax(2);
+  private final PWMSparkMax m_rearRightMotor = new PWMSparkMax(3);
 
   @Override
   public void robotInit() {
-    SendableRegistry.addChild(m_robotDrive, m_leftMotor);
-    SendableRegistry.addChild(m_robotDrive, m_rightMotor);
-
+    SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
+    SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
+    m_frontLeftMotor.addFollower(m_rearLeftMotor);
+    m_frontRightMotor.addFollower(m_rearRightMotor);
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
-    m_rightMotor.setInverted(true);
+    m_rearRightMotor.setInverted(true);
 
-    m_robotDrive = new DifferentialDrive(m_leftMotor::set, m_rightMotor::set);
+    m_robotDrive = new DifferentialDrive(m_frontLeftMotor::set, m_frontRightMotor::set);
     m_leftStick = new Joystick(0);
     m_rightStick = new Joystick(1);
   }
