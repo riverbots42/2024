@@ -27,19 +27,21 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     // addFollower merges left motors and right motors.
-    m_frontLeftMotor.addFollower(m_rearLeftMotor);
-    m_frontRightMotor.addFollower(m_rearRightMotor);
+    //temporarly gone to get to work? 
+   // m_frontLeftMotor.addFollower(m_rearLeftMotor);
+   // m_frontRightMotor.addFollower(m_rearRightMotor);
 
-    SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
-    SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
+   //temp gone to get to worK?
+   // SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
+    //SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
     
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
-    m_rearRightMotor.setInverted(true);
-
-    m_robotDrive = new DifferentialDrive(m_frontLeftMotor::set, m_frontRightMotor::set);
-    m_leftStick = new Joystick(0);
+    m_frontRightMotor.setInverted(true);
+    m_rearRightMotor.setInverted(true);    
+    m_robotDrive = new DifferentialDrive(m_frontLeftMotor, m_frontRightMotor);
+    m_leftStick = new Joystick(1);
     m_rightStick = new Joystick(1);
   }
 
