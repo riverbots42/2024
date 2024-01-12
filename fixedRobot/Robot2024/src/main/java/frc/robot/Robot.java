@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import org.photonvision.PhotonCamera;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -23,7 +24,7 @@ public class Robot extends TimedRobot {
   private final PWMSparkMax m_rearLeftMotor = new PWMSparkMax(1);
   private final PWMSparkMax m_frontRightMotor = new PWMSparkMax(2);
   private final PWMSparkMax m_rearRightMotor = new PWMSparkMax(3);
-
+  PhotonCamera camera = new PhotonCamera("null"); // necesitamos una cámara
   @Override
   public void robotInit() {
     // addFollower merges left motors and right motors.
@@ -47,6 +48,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    
     m_robotDrive.tankDrive(-m_leftStick.getY(), -m_rightStick.getY());
   }
 }
