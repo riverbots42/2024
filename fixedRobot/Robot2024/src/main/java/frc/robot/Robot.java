@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import org.photonvision.PhotonCamera;
+//import org.photonvision.PhotonCamera;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -20,11 +20,12 @@ public class Robot extends TimedRobot {
   private Joystick m_leftStick;
   private Joystick m_rightStick;
 
-  private final PWMSparkMax m_frontLeftMotor = new PWMSparkMax(0); //channels may change
-  private final PWMSparkMax m_rearLeftMotor = new PWMSparkMax(1);
+  //Channel one works now and IDK why but at least we got the motors working
+  private final PWMSparkMax m_frontLeftMotor = new PWMSparkMax(1); //channels may change
+  private final PWMSparkMax m_rearLeftMotor = new PWMSparkMax(0);
   private final PWMSparkMax m_frontRightMotor = new PWMSparkMax(2);
   private final PWMSparkMax m_rearRightMotor = new PWMSparkMax(3);
-  PhotonCamera camera = new PhotonCamera("null"); // necesitamos una cámara
+ // PhotonCamera camera = new PhotonCamera("null"); // necesitamos una cámara
   @Override
   public void robotInit() {
     // addFollower merges left motors and right motors.
