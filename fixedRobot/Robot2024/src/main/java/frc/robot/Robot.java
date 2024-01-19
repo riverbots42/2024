@@ -4,10 +4,10 @@
 
 package frc.robot;
 
-//import org.photonvision.PhotonCamera;
-import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
@@ -26,16 +26,34 @@ public class Robot extends TimedRobot {
   private final PWMSparkMax m_frontRightMotor = new PWMSparkMax(2);
   private final PWMSparkMax m_rearRightMotor = new PWMSparkMax(3);
  // PhotonCamera camera = new PhotonCamera("null"); // necesitamos una cámara
+ 
+  // distance the robot wants to stay from an object
+  // (one meter)
+  //Ultrasonic info: https://docs.wpilib.org/en/stable/docs/software/hardware-apis/sensors/ultrasonics-software.html#ultrasonics-software
+  static final double kHoldDistanceMillimeters = 1.0e3;
+  
+  Ultrasonic m_rangeFinder = new Ultrasonic(1, 2);
+  double distanceMillimeters = m_rangeFinder.getRangeMM();
+  final int ultrasonicPingPort = 0;
+  final int ultrasonicEchoPort = 1;
+  // Ultrasonic sensors tend to be quite noisy and susceptible to sudden outliers,
+  // so measurements are filtered with a 5-sample median filter
+  private final MedianFilter m_filter = new MedianFilter(5);
+
+  private final Ultrasonic m_ultrasonic = new Ultrasonic(ultrasonicPingPort, ultrasonicEchoPort);
+
+
   @Override
   public void robotInit() {
     // addFollower merges left motors and right motors.
     //temporarly gone to get to work? 
-   // m_frontLeftMotor.addFollower(m_rearLeftMotor);
-   // m_frontRightMotor.addFollower(m_rearRightMotor);
+    m_frontLeftMotor.addFollower(m_rearLeftMotor);
+    m_frontRightMotor.addFollower(m_rearRightMotor);
 
    //temp gone to get to worK?
    // SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
     //SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
+
     
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
