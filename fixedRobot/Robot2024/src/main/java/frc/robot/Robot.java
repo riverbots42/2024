@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+
 import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
@@ -29,7 +31,7 @@ public class Robot extends TimedRobot {
  
   // distance the robot wants to stay from an object
   // (one meter)
-  //Ultrasonic info: https://docs.wpilib.org/en/stable/docs/software/hardware-apis/sensors/ultrasonics-software.html#ultrasonics-software
+ // Ultrasonic info: https://docs.wpilib.org/en/stable/docs/software/hardware-apis/sensors/ultrasonics-software.html#ultrasonics-software
   static final double kHoldDistanceMillimeters = 1.0e3;
   
   Ultrasonic m_rangeFinder = new Ultrasonic(1, 2);
@@ -40,8 +42,9 @@ public class Robot extends TimedRobot {
   // so measurements are filtered with a 5-sample median filter
   private final MedianFilter m_filter = new MedianFilter(5);
 
-  private final Ultrasonic m_ultrasonic = new Ultrasonic(ultrasonicPingPort, ultrasonicEchoPort);
-
+ //THIS line breaks our code:
+ // private final Ultrasonic m_ultrasonic = new Ultrasonic(ultrasonicPingPort, ultrasonicEchoPort);
+  
 
   @Override
   public void robotInit() {
@@ -51,8 +54,8 @@ public class Robot extends TimedRobot {
     m_frontRightMotor.addFollower(m_rearRightMotor);
 
    //temp gone to get to worK?
-   // SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
-    //SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
+    SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
+    SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
 
     
     // We need to invert one side of the drivetrain so that positive voltages
@@ -61,8 +64,8 @@ public class Robot extends TimedRobot {
     m_frontRightMotor.setInverted(true);
     m_rearRightMotor.setInverted(true);    
     m_robotDrive = new DifferentialDrive(m_frontLeftMotor, m_frontRightMotor);
-    m_leftStick = new Joystick(1);
-    m_rightStick = new Joystick(1);
+    m_leftStick = new Joystick(0);
+    m_rightStick = new Joystick(0);
   }
 
   @Override
