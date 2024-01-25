@@ -44,6 +44,7 @@ public class Robot extends TimedRobot {
 
  //THIS line breaks our code:
  // private final Ultrasonic m_ultrasonic = new Ultrasonic(ultrasonicPingPort, ultrasonicEchoPort);
+ //Maybe it'll work better after we actually have an ultrasonic sensor
   
 
   @Override
@@ -67,10 +68,22 @@ public class Robot extends TimedRobot {
     m_leftStick = new Joystick(0);
     m_rightStick = new Joystick(0);
   }
+  @Override
+  public void autonomousInit() {
+    //What's this?
+    // TODO Auto-generated method stub 
+    super.autonomousInit();
+
+    m_frontRightMotor.setInverted(true);
+    m_rearRightMotor.setInverted(true);
+  }
 
   @Override
   public void teleopPeriodic() {
-    
+
     m_robotDrive.tankDrive(-m_leftStick.getY(), -m_rightStick.getY());
+  }
+  public void autonomousPeriodic() {
+    // Do something
   }
 }
