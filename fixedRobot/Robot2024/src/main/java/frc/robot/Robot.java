@@ -11,7 +11,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+//import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 
 /**
  * This is a demo program showing the use of the DifferentialDrive class, specifically it contains
@@ -23,10 +26,11 @@ public class Robot extends TimedRobot {
   private Joystick m_rightStick;
 
   //Channel one works now and IDK why but at least we got the motors working
-  private final PWMSparkMax m_frontLeftMotor = new PWMSparkMax(1); //channels may change
-  private final PWMSparkMax m_rearLeftMotor = new PWMSparkMax(0);
-  private final PWMSparkMax m_frontRightMotor = new PWMSparkMax(2);
-  private final PWMSparkMax m_rearRightMotor = new PWMSparkMax(3);
+  //https://docs.revrobotics.com/sparkmax/software-resources/spark-max-code-examples
+  private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
+  private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
+  private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
+  private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
  // PhotonCamera camera = new PhotonCamera("null"); // necesitamos una cámara
  
   // distance the robot wants to stay from an object
@@ -51,8 +55,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // addFollower merges left motors and right motors.
     //temporarly gone to get to work? 
-    m_frontLeftMotor.addFollower(m_rearLeftMotor);
-    m_frontRightMotor.addFollower(m_rearRightMotor);
+    //m_frontLeftMotor.addFollower(m_rearLeftMotor);
+    //m_frontRightMotor.addFollower(m_rearRightMotor);
 
    //temp gone to get to worK?
     SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
