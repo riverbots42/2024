@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 
@@ -11,22 +7,25 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+//import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax; If we ever want to use PWM again
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
+
 
 /**
- * This is a demo program showing the use of the DifferentialDrive class, specifically it contains
- * the code necessary to operate a robot with tank drive.
+ * Tank drive and main robot code
  */
 public class Robot extends TimedRobot {
   private DifferentialDrive m_robotDrive;
   private Joystick m_leftStick;
   private Joystick m_rightStick;
 
-  //Channel one works now and IDK why but at least we got the motors working
-  private final PWMSparkMax m_frontLeftMotor = new PWMSparkMax(1); //channels may change
-  private final PWMSparkMax m_rearLeftMotor = new PWMSparkMax(0);
-  private final PWMSparkMax m_frontRightMotor = new PWMSparkMax(2);
-  private final PWMSparkMax m_rearRightMotor = new PWMSparkMax(3);
+  //https://codedocs.revrobotics.com/java/com/revrobotics/package-summary.html
+  private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
+  private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
+  private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
+  private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
  // PhotonCamera camera = new PhotonCamera("null"); // necesitamos una cámara
  
   // distance the robot wants to stay from an object
@@ -51,10 +50,9 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // addFollower merges left motors and right motors.
     //temporarly gone to get to work? 
-    m_frontLeftMotor.addFollower(m_rearLeftMotor);
-    m_frontRightMotor.addFollower(m_rearRightMotor);
-
-   //temp gone to get to worK?
+    //m_frontLeftMotor.addFollower(m_rearLeftMotor);
+    //m_frontRightMotor.addFollower(m_rearRightMotor);
+    
     SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
     SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
 
