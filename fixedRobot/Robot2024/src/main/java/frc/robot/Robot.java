@@ -7,6 +7,12 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
+import java.util.List;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 //import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax; If we ever want to use PWM again
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -26,7 +32,7 @@ public class Robot extends TimedRobot {
   private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
   private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
   private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
- // PhotonCamera camera = new PhotonCamera("null"); // necesitamos una cámara
+  PhotonCamera camera = new PhotonCamera("null"); // necesitamos una cámara
  
   // distance the robot wants to stay from an object
   // (one meter)
@@ -78,7 +84,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-
+    /* 
+    var result = camera.getLatestResult();
+    boolean hasTargets = result.hasTargets();
+    if(hasTargets)
+    {
+      List<PhotonTrackedTarget> targets = result.getTargets();
+      PhotonTrackedTarget target = result.getBestTarget();
+      double yaw = target.getYaw();
+      double pitch = target.getPitch();
+      double area = target.getArea();
+      double skew = target.getSkew();
+      int targetID = target.getFiducialId();
+      System.out.println(targetID);
+    }
+    */
+    
     m_robotDrive.tankDrive(-m_leftStick.getY(), -m_rightStick.getY());
   }
   public void autonomousPeriodic() {
