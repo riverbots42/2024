@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 
@@ -11,23 +7,21 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-//import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
-import com.revrobotics.CANSparkMax; //could need to remove the "Max"
+//import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax; If we ever want to use PWM again
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 
 
 /**
- * This is a demo program showing the use of the DifferentialDrive class, specifically it contains
- * the code necessary to operate a robot with tank drive.
+ * Tank drive and main robot code
  */
 public class Robot extends TimedRobot {
   private DifferentialDrive m_robotDrive;
   private Joystick m_leftStick;
   private Joystick m_rightStick;
 
-  //Channel one works now and IDK why but at least we got the motors working
-  //https://docs.revrobotics.com/sparkmax/software-resources/spark-max-code-examples
+  //https://codedocs.revrobotics.com/java/com/revrobotics/package-summary.html
   private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
   private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
   private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
