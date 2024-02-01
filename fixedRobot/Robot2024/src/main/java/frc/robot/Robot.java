@@ -52,8 +52,7 @@ public class Robot extends TimedRobot {
     //temporarly gone to get to work? 
     //m_frontLeftMotor.addFollower(m_rearLeftMotor);
     //m_frontRightMotor.addFollower(m_rearRightMotor);
-
-   //temp gone to get to worK?
+    
     SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
     SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
 
