@@ -50,8 +50,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // addFollower merges left motors and right motors.
     //temporarly gone to get to work? 
-    //m_frontLeftMotor.addFollower(m_rearLeftMotor);
-    //m_frontRightMotor.addFollower(m_rearRightMotor);
+    m_frontLeftMotor.follow(m_rearLeftMotor);
+    m_frontRightMotor.follow(m_rearRightMotor);
     
     SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
     SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
@@ -62,9 +62,9 @@ public class Robot extends TimedRobot {
     // gearbox is constructed, you might have to invert the left side instead.
     m_frontRightMotor.setInverted(true);
     m_rearRightMotor.setInverted(true);    
-    m_robotDrive = new DifferentialDrive(m_frontLeftMotor, m_frontRightMotor);
+    m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
     m_leftStick = new Joystick(0);
-    m_rightStick = new Joystick(0);
+    m_rightStick = new Joystick(1);
   }
   @Override
   public void autonomousInit() {
