@@ -24,8 +24,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
  */
 public class Robot extends TimedRobot {
   private DifferentialDrive m_robotDrive;
-  private Joystick m_leftStick;
-  private Joystick m_rightStick;
+  private Joystick stick;
+  
 
   //https://codedocs.revrobotics.com/java/com/revrobotics/package-summary.html
   private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
@@ -56,8 +56,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // addFollower merges left motors and right motors.
     //temporarly gone to get to work? 
-    //m_frontLeftMotor.addFollower(m_rearLeftMotor);
-    //m_frontRightMotor.addFollower(m_rearRightMotor);
+    m_frontLeftMotor.follow(m_rearLeftMotor);
+    m_frontRightMotor.follow(m_rearRightMotor);
     
     SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
     SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
@@ -66,17 +66,18 @@ public class Robot extends TimedRobot {
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
-    m_frontRightMotor.setInverted(true);
-    m_rearRightMotor.setInverted(true);    
-    m_robotDrive = new DifferentialDrive(m_frontLeftMotor, m_frontRightMotor);
-    m_leftStick = new Joystick(0);
-    m_rightStick = new Joystick(0);
+      
+    m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
+    stick = new Joystick(0);
+    
   }
   @Override
   public void autonomousInit() {
     //What's this?
     // TODO Auto-generated method stub 
     super.autonomousInit();
+    stick.setXChannel(1);
+    stick.setYChannel(5);
 
     m_frontRightMotor.setInverted(true);
     m_rearRightMotor.setInverted(true);
@@ -84,7 +85,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    /* 
+        /* 
     var result = camera.getLatestResult();
     boolean hasTargets = result.hasTargets();
     if(hasTargets)
@@ -100,7 +101,7 @@ public class Robot extends TimedRobot {
     }
     */
     
-    m_robotDrive.tankDrive(-m_leftStick.getY(), -m_rightStick.getY());
+    m_robotDrive.tankDrive(stick.getRawAxis(1), stick.getRawAxis(5));
   }
   public void autonomousPeriodic() {
     // Do something
