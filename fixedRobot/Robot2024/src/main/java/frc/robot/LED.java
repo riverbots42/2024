@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
 public class LED {
   
-    public void LEDInit() {
+    public static void LEDInit() {
       //All LED Setup:
 
       // PWM port 9
@@ -13,9 +13,8 @@ public class LED {
       AddressableLED m_led = new AddressableLED(9);
   
       // Reuse buffer
-      // Default to a length of 60, start empty output
       // Length is expensive to set, so only set it once, then just update data
-      AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(60);
+      AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(256);
       m_led.setLength(m_ledBuffer.getLength());
   
       // Set the data
@@ -24,11 +23,12 @@ public class LED {
 
       //LED color setting
       int LEDLength =  m_ledBuffer.getLength();
-      for (var i = 0; i < LEDLength; i++) {
-          // Sets the specified LED to the RGB values for red
+      for (int i = 0; i < LEDLength; i++) {
+          // Sets the specified LED to the RGB values for yellow
           m_ledBuffer.setRGB(i, 255, 255, 0);
          }
          
       m_led.setData(m_ledBuffer);
+      System.out.println("Hello");
     }
 }

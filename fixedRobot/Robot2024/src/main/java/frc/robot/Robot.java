@@ -44,10 +44,14 @@ public class Robot extends TimedRobot {
  //THIS line breaks our code:
  // private final Ultrasonic m_ultrasonic = new Ultrasonic(ultrasonicPingPort, ultrasonicEchoPort);
  //Maybe it'll work better after we actually have an ultrasonic sensor
-  
 
   @Override
   public void robotInit() {
+    //Turn on the face
+    LED.LEDInit();
+    System.out.println("RobotInit");
+
+
     // addFollower merges left motors and right motors.
     //temporarly gone to get to work? 
     //m_frontLeftMotor.addFollower(m_rearLeftMotor);
