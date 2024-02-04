@@ -41,16 +41,15 @@ public class Robot extends TimedRobot {
   // so measurements are filtered with a 5-sample median filter
   private final MedianFilter m_filter = new MedianFilter(5);
 
+  public LED led;
+
  //THIS line breaks our code:
  // private final Ultrasonic m_ultrasonic = new Ultrasonic(ultrasonicPingPort, ultrasonicEchoPort);
  //Maybe it'll work better after we actually have an ultrasonic sensor
 
   @Override
   public void robotInit() {
-    //Turn on the face
-    LED.LEDInit();
-    System.out.println("RobotInit");
-
+    led = new LED();
 
     // addFollower merges left motors and right motors.
     //temporarly gone to get to work? 
@@ -83,8 +82,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    
+    led.LEDPeriodic();
     m_robotDrive.tankDrive(stick.getRawAxis(1), stick.getRawAxis(5));
+
+    //Turn on the face
+    // LED.LEDInit();
   }
   public void autonomousPeriodic() {
     // Do something
