@@ -11,6 +11,7 @@ public class LED {
     //For translating our png output to our physically flipped LED arrays
     public int cur_x;
     public int cur_y;
+    public int cur_index;
 
     public LED() {
       //All LED Setup:
@@ -23,6 +24,7 @@ public class LED {
 
       cur_x = 0;
       cur_y = 0;
+      cur_index = 0;
 
   
       // Reuse buffer
@@ -38,7 +40,7 @@ public class LED {
       int LEDLength =  m_ledBuffer.getLength();
       for (int i = 0; i < LEDLength; i++) {
           // Sets the specified LED to the RGB values for yellow
-          m_ledBuffer.setRGB(i, i, 512-i, 0);
+          m_ledBuffer.setRGB(i, 0, 0, 0);
         //  System.out.printf("%d of %d\n", i, LEDLength);
          }
          
@@ -58,19 +60,36 @@ public class LED {
       if(idx>511) idx=0;
       m_led.setData(m_ledBuffer); */
 
-
-
+      
+      
       for( int x = 0; x < 32; x++) {
         for( int y = 0; y < 16; y++) {
-            if( x == cur_x && y == cur_y ) {
-                // turn on the LED
-            } else {
-                // turn off the LED
-            }
+          if((x + 1) % 2 == 0){
+            cur_index = 16 * (31-x) + y;
+            System.out.println(x + ": " + y + " index: " + cur_index);
+            m_ledBuffer.setRGB(cur_index, 255, 0, 255);
+            m_led.setData(m_ledBuffer);
+          }        
+          else{
+            cur_index = 16 * (31-x) + 15-y;
+            System.out.println(x + ": " + y + " index: " + cur_index);
+            m_ledBuffer.setRGB(cur_index, 255, 0, 255);
+            m_led.setData(m_ledBuffer);
+          }
         }
+        cur_index = 0;
     }
+    int LEDLength =  m_ledBuffer.getLength();
+      for (int i = 0; i < LEDLength; i++) {
+          // Sets the specified LED to the RGB values for yellow
+          m_ledBuffer.setRGB(i, 0, 0, 0);
+        //  System.out.printf("%d of %d\n", i, LEDLength);
+         }
+         
+      m_led.setData(m_ledBuffer);
 
       cur_x++; if(cur_x > 31) cur_x = 0;
       cur_y++; if(cur_y > 15) cur_y = 0;
+      
     }
 }
