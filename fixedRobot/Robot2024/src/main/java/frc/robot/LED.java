@@ -63,17 +63,26 @@ public class LED {
 
 
       //New code from BJ 
-      for( int x = 0; x < 32; x++) {
-        for( int y = 0; y < 16; y++) {
-          if((x + 1) % 2 == 0){
-            cur_index = 16 * (31-x) + y;
-            System.out.println(x + ": " + y + " index: " + cur_index);
+      //For loop we want:
+      /*
+       * for(int i = 0; int < pngMap/3; i++)
+       * {
+       *    red = i * 3;
+       *    blue = i * 3 +1;
+       *    green = i * 3 +2;
+       * }
+       */
+      for(int pngRow = 0; pngRow < 32; pngRow++) {
+        for( int pngColumn = 0; pngColumn < 16; pngColumn++) {
+          if((pngRow + 1) % 2 == 0){
+            cur_index = 16 * (31-pngRow) + pngColumn;
+            System.out.println(pngRow + ": " + pngColumn + " index: " + cur_index);
             m_ledBuffer.setRGB(cur_index, 255, 0, 255);
             m_led.setData(m_ledBuffer);
           }        
           else{
-            cur_index = 16 * (31-x) + 15-y;
-            System.out.println(x + ": " + y + " index: " + cur_index);
+            cur_index = 16 * (31-pngRow) + 15-pngColumn;
+            System.out.println(pngRow + ": " + pngColumn + " index: " + cur_index);
             m_ledBuffer.setRGB(cur_index, 255, 0, 255);
             m_led.setData(m_ledBuffer);
           }
