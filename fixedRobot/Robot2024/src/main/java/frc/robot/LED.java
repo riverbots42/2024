@@ -48,6 +48,7 @@ public class LED {
     }
 
     public void LEDPeriodic() {
+      //Snake code
       /*
       for(int i =0; i<m_ledBuffer.getLength(); i++) {
         m_ledBuffer.setRGB(i, 0,0,0);
@@ -59,7 +60,7 @@ public class LED {
       m_led.setData(m_ledBuffer); */
 
 
-
+      //New code from BJ 
       for( int x = 0; x < 32; x++) {
         for( int y = 0; y < 16; y++) {
             if( x == cur_x && y == cur_y ) {

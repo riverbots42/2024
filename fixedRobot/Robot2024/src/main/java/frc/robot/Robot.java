@@ -10,7 +10,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 //import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax; If we ever want to use PWM again
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 
 /**
@@ -19,7 +20,12 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 public class Robot extends TimedRobot {
   private DifferentialDrive m_robotDrive;
   private Joystick stick;
-  
+
+  final int LEFT_BUMPER = 5;
+  final int RIGHT_BUMPER = 6;
+  VictorSPX winchAscender = new VictorSPX(5);
+
+
 
   //https://codedocs.revrobotics.com/java/com/revrobotics/package-summary.html
   private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
@@ -84,6 +90,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     led.LEDPeriodic();
     m_robotDrive.tankDrive(stick.getRawAxis(1), stick.getRawAxis(5));
+
+    winchAscender.set(VictorSPXControlMode.PercentOutput,stick.getRawAxis(RIGHT_BUMPER-LEFT_BUMPER));
 
     //Turn on the face
     // LED.LEDInit();
