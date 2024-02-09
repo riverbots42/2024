@@ -12,6 +12,8 @@ public class LED {
     public int cur_x;
     public int cur_y;
     public int cur_index;
+    
+    private int[] face = Faces.getFace();
 
     public LED() {
       //All LED Setup:
@@ -46,60 +48,32 @@ public class LED {
          
       m_led.setData(m_ledBuffer);
       idx = 0;
-      System.out.println("Hello");
     }
 
-    public void LEDPeriodic() {
-      //Snake code
-      /*
-      for(int i =0; i<m_ledBuffer.getLength(); i++) {
-        m_ledBuffer.setRGB(i, 0,0,0);
-      }
+  public void LEDPeriodic() {
+    int red = 0;
+    int green = 0;
+    int blue = 0;
+    final int NUM_ROWS = 16;
+    final int NUM_COLS = 32;
 
-      m_ledBuffer.setRGB(idx, 0, 255, 0);
-      idx++;
-      if(idx>511) idx=0;
-      m_led.setData(m_ledBuffer); */
+    for(int idx = 0; idx < face.length/3; idx++) {
+      int col = (idx / 3) % NUM_ROWS;
+      int row = (idx / 3) / NUM_COLS;
 
-
-      //New code from BJ 
-      //For loop we want:
-      /*
-       * for(int i = 0; int < pngMap/3; i++)
-       * {
-       *    red = i * 3;
-       *    blue = i * 3 +1;
-       *    green = i * 3 +2;
-       * }
-       */
-      for(int pngRow = 0; pngRow < 32; pngRow++) {
-        for( int pngColumn = 0; pngColumn < 16; pngColumn++) {
-          if((pngRow + 1) % 2 == 0){
-            cur_index = 16 * (31-pngRow) + pngColumn;
-            System.out.println(pngRow + ": " + pngColumn + " index: " + cur_index);
-            m_ledBuffer.setRGB(cur_index, 255, 0, 255);
-            m_led.setData(m_ledBuffer);
-          }        
-          else{
-            cur_index = 16 * (31-pngRow) + 15-pngColumn;
-            System.out.println(pngRow + ": " + pngColumn + " index: " + cur_index);
-            m_ledBuffer.setRGB(cur_index, 255, 0, 255);
-            m_led.setData(m_ledBuffer);
-          }
-        }
-        cur_index = 0;
-    }
-    int LEDLength =  m_ledBuffer.getLength();
-      for (int i = 0; i < LEDLength; i++) {
-          // Sets the specified LED to the RGB values for yellow
-          m_ledBuffer.setRGB(i, 0, 0, 0);
-        //  System.out.printf("%d of %d\n", i, LEDLength);
-         }
-         
-      m_led.setData(m_ledBuffer);
-
-      cur_x++; if(cur_x > 31) cur_x = 0;
-      cur_y++; if(cur_y > 15) cur_y = 0;
+      red = row * 3;
+      green = row * 3 + 1;
+      blue = row * 3 + 2;
       
+      if((row + 1) % 2 == 0){ //if it's odd
+        int cur_index = NUM_ROWS * (NUM_COLS-1-row) + col;
+        m_ledBuffer.setRGB(cur_index, red, green, blue);
+      } else {
+        int cur_index = NUM_ROWS * (NUM_COLS-1-row) + NUM_ROWS-1-col;
+        m_ledBuffer.setRGB(cur_index, red, green, blue);
+      }
     }
+    m_led.setData(m_ledBuffer);
+    cur_index = 0;
+  }
 }
