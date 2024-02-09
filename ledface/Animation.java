@@ -3,9 +3,9 @@ public class Animation {
     public Frame faces[];
     public int current;
 
-    public Animation(Frame in)
+    public Animation(Frame src[])
     {
-        faces = in;
+        faces = src;
         reset();
     }
     public void reset()

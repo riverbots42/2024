@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.image.*;
 import javax.imageio.ImageIO;
 
-public class Hello {
+public class Main {
     public static TreeMap<String,String> Iterate(File dir){
         String filenames[] = dir.list();
         TreeMap<String,String> rereturn=new TreeMap<String,String>();
@@ -20,12 +20,14 @@ public class Hello {
         }
         return rereturn;
     }
-    public static String imageToSource(BufferedImage img, String identifier) {
+    public static String imageToSource(String animation, BufferedImage img, String identifier) {
         int width = img.getWidth();
         int height = img.getHeight();
         // This will eventually hold something like "int identifier[] = { ###, ###, ... };"
         StringBuilder ret = new StringBuilder();
         ret.append("int ");
+        ret.append(animation);
+        ret.append("__");
         ret.append(identifier);
         ret.append("[] = { ");
         Color[][] result = new Color[height][width];  // deprecated
@@ -49,6 +51,7 @@ public class Hello {
         //  2. Only display filenames that end in .png
         File files[] = new File(".").listFiles();
         for(int j=0; j<files.length; j++) {
+            //ArrayList 
             if(files[j].isDirectory()) {
                 //System.out.printf("%s is a directory.\n", files[j].getName());
                 TreeMap<String,String> rereturn= Iterate(files[j]);
@@ -59,15 +62,13 @@ public class Hello {
                     try 
                     {
                         File f = new File (files[j], rereturn.get(key));
-                        System.out.println(f.toString());
                         BufferedImage winkyFace = ImageIO.read(f);
-                        System.out.println(imageToSource(winkyFace, key));
+                        System.out.println(imageToSource(files[j].getName(), winkyFace, key));
                     } 
                     catch(IOException E) 
                     {
                         E.printStackTrace();
                     }
-                    System.out.println(key + " = " + rereturn.get(key));
                 }
             }
         }
