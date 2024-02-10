@@ -2,11 +2,14 @@ package frc.robot;
 
 
 import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.wpilibj.Ultrasonic;
+
 import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -50,6 +53,8 @@ public class Robot extends TimedRobot {
 
   public LED led;
 
+  private final Encoder encoder = new Encoder(0, 1);
+
  //THIS line breaks our code:
  // private final Ultrasonic m_ultrasonic = new Ultrasonic(ultrasonicPingPort, ultrasonicEchoPort);
  //Maybe it'll work better after we actually have an ultrasonic sensor
@@ -77,6 +82,9 @@ public class Robot extends TimedRobot {
 
     m_frontRightMotor.setInverted(true);
     m_rearRightMotor.setInverted(true);
+
+    encoder.reset();
+    encoder.setDistancePerPulse(1./256.); //change this value to match whatever distance we want (256 pulse/rotation in SECONDS currently)
   }
 
   @Override
@@ -90,6 +98,12 @@ public class Robot extends TimedRobot {
     // LED.LEDInit();
   }
   public void autonomousPeriodic() {
-    // Do something
+    //Example code.  We'll probably want while !aprilTagSeen spin left and then follow it
+    // Drives forward at half speed until the robot has moved 5 feet, then stops:
+    if(encoder.getDistance() < 5) {
+      m_robotDrive.tankDrive(0.5, 0.5);
+  } else {
+      m_robotDrive.tankDrive(0, 0);
+  }
   }
 }
