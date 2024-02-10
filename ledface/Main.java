@@ -10,8 +10,8 @@ import java.io.*;
 import java.util.*;
 import javax.imageio.ImageIO;
 
-public class Main {
-
+public class Main
+{
     /**
      * Return a TreeMap of all the identifiers/filenames found mathing *.png
      * in a given directory.
@@ -26,7 +26,7 @@ public class Main {
         if(filenames!=null)
         {
             for(int i=0; i<filenames.length; i++)
-	    {
+            {
                 if(filenames[i].endsWith(".png"))
                 {
                     rereturn.put(filenames[i].substring(0,filenames[i].length()-4), filenames[i]);
@@ -46,18 +46,19 @@ public class Main {
      * @param identifier the name of the identifier to make.
      * @return a Java source code line.
     **/
-    public static String imageToSource(String animation, BufferedImage img, String identifier) {
+    public static String imageToSource(String animation, BufferedImage img, String identifier)
+    {
         int width = img.getWidth();
         int height = img.getHeight();
         // This will eventually hold something like "int identifier[] = { ###, ###, ... };"
         StringBuilder ret = new StringBuilder();
-	// The first part of the line is "int animation__identifier[] = { "
+        // The first part of the line is "int animation__identifier[] = { "
         ret.append("int ");
         ret.append(animation);
         ret.append("__");
         ret.append(identifier);
         ret.append("[] = { ");
-	// Now we generate the list of ints to put in the file.
+        // Now we generate the list of ints to put in the file.
         Color[][] result = new Color[height][width];  // deprecated
         for (int row = 0; row < height; row++) 
         {
@@ -69,7 +70,7 @@ public class Main {
                 ret.append(result[row][col].getBlue()); ret.append(", ");
             }
         }
-	// Finally we close with the "};" to end the line.
+        // Finally we close with the "};" to end the line.
         ret.append("};\n");
         return ret.toString();
     }
@@ -78,10 +79,13 @@ public class Main {
      * Look in the current directory for subdirectories and .png files therein and generate
      * an Animations.java that has all the raw data therefrom.
     **/
-    public static void main(String args[]) {
+    public static void main(String args[])
+    {
         File files[] = new File(".").listFiles();
-        for(int j=0; j<files.length; j++) {
-            if(files[j].isDirectory()) {
+        for(int j=0; j<files.length; j++)
+        {
+            if(files[j].isDirectory())
+            {
                 TreeMap<String,String> rereturn= Iterate(files[j]);
                 Iterator<String> i=rereturn.keySet().iterator();
                 while(i.hasNext())
