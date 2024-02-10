@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-//import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax; If we ever want to use PWM again
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -30,8 +29,6 @@ public class Robot extends TimedRobot {
   //VictorSPX winchAscender = new VictorSPX(5);
 
 
-
-  //https://codedocs.revrobotics.com/java/com/revrobotics/package-summary.html
   private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
   private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
   private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
@@ -61,22 +58,14 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     led = new LED();
 
-    // addFollower merges left motors and right motors.
-    //temporarly gone to get to work? 
     m_frontLeftMotor.follow(m_rearLeftMotor);
     m_frontRightMotor.follow(m_rearRightMotor);
     
     SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
     SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
 
-    
-    // We need to invert one side of the drivetrain so that positive voltages
-    // result in both sides moving forward. Depending on how your robot's
-    // gearbox is constructed, you might have to invert the left side instead.
-      
     m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
     stick = new Joystick(0);
-    
   }
   @Override
   public void autonomousInit() {
