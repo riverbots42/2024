@@ -11,8 +11,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 //VictorSPX import stopped working again and I don't know why this time
-//import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
-//import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 
 /**
@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
   final int RIGHT_BUMPER = 6;
   
   
-  //VictorSPX winchAscender = new VictorSPX(5);
+  VictorSPX winchAscender = new VictorSPX(5);
 
 
   private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
@@ -84,7 +84,7 @@ public class Robot extends TimedRobot {
     led.LEDPeriodic();
     m_robotDrive.tankDrive(stick.getRawAxis(1), stick.getRawAxis(5));
 
-    //winchAscender.set(VictorSPXControlMode.PercentOutput,stick.getRawAxis(RIGHT_BUMPER-LEFT_BUMPER));
+    winchAscender.set(VictorSPXControlMode.PercentOutput,stick.getRawAxis(RIGHT_BUMPER-LEFT_BUMPER));
 
     //Turn on the face
     // LED.LEDInit();
