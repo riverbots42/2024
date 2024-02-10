@@ -1,19 +1,34 @@
+package frc.robot;
+
 /**
  * Class describing an array of frames to be displayed.
 **/
 
+import java.util.*;
+
 public class Animation {
     // The array of frame data.
-    public Frame faces[];
+    public Frame frames[];
     // The index of the next frame to be displayed.
-    synchronized public int current;
+    public int current;
 
     /**
      * Initializes an Animation object given a list of Frames.
     **/
     public Animation(Frame src[])
     {
-        faces = src;
+        frames = src;
+        reset();
+    }
+
+    /**
+     * Initializes an Animation object given a Set of Frames.
+    **/
+    public Animation(ArrayList<Frame> src)
+    {
+        Frame dummy[] = new Frame[] {};
+        // Java compiler is dumm; requires a dummy Frame object to coerce type correctly.
+        frames = src.toArray(dummy);
         reset();
     }
 
@@ -29,9 +44,9 @@ public class Animation {
     **/
     public Frame periodic()
     {
-        Frame ret = faces[current];
+        Frame ret = frames[current];
         current++;
-        if (current >= faces.length)
+        if (current >= frames.length)
         {
             reset();
         }

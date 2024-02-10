@@ -1,0 +1,25 @@
+// TEMPLATE: Template file to generate Animations.java
+// TEMPLATE: (lines starting with TEMPLATE will be removed)
+// TEMPLATE: (lines with DATA will be replaced with the actual data)
+package frc.robot;
+
+/**
+ * Class containing a list of all known animations.
+**/
+
+import java.util.*;
+
+public class Animations
+{
+    public TreeMap<String,Animation> animations;
+
+    public Animations() {
+        animations = new TreeMap<String,Animation>();
+// DATA: This line will be replaced by all the calls to animations.add()
+    }
+
+    public Animation get(String name)
+    {
+        return animations.get(name);
+    }
+}
