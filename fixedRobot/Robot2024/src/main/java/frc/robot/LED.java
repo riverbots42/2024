@@ -13,7 +13,7 @@ public class LED {
     public int cur_y;
     public int cur_index;
     
-    private int[] face = Faces.getFace();
+    private int[] pngMap = Faces.getFace();
 
     public LED() {
       //All LED Setup:
@@ -55,25 +55,27 @@ public class LED {
     int green = 0;
     int blue = 0;
     final int NUM_ROWS = 16;
-    final int NUM_COLS = 32;
+    final int NUM_COLS = 31;
 
-    for(int idx = 0; idx < face.length/3; idx++) {
+    for(int idx = 0; idx < pngMap.length/3; idx++) {
       int col = (idx / 3) % NUM_ROWS;
       int row = (idx / 3) / NUM_COLS;
 
-      red = row * 3;
-      green = row * 3 + 1;
-      blue = row * 3 + 2;
+      red = pngMap[3*idx];
+      green = pngMap[3*idx + 1];
+      blue = pngMap[3*idx+2];
       
-      if((row + 1) % 2 == 0){ //if it's odd
-        int cur_index = NUM_ROWS * (NUM_COLS-1-row) + col;
-        m_ledBuffer.setRGB(cur_index, red, green, blue);
+      if((row + 1) % 2 == 0){ //if it's even
+        int cur_index = 16 * (31-row) + col;
+        System.out.println("Even Index: " + cur_index);
+        m_ledBuffer.setRGB(cur_index*3, red, green , blue );
       } else {
-        int cur_index = NUM_ROWS * (NUM_COLS-1-row) + NUM_ROWS-1-col;
-        m_ledBuffer.setRGB(cur_index, red, green, blue);
+        int cur_index = 16 * (31-row) + (15-col);
+        System.out.println("Odd Index: " + cur_index);
+        m_ledBuffer.setRGB(cur_index*3, red, green, blue );
       }
     }
     m_led.setData(m_ledBuffer);
-    cur_index = 0;
+   // cur_index = 0;
   }
 }
