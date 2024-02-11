@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-//VictorSPX import stopped working again and I don't know why this time
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -99,11 +98,11 @@ public class Robot extends TimedRobot {
   }
   public void autonomousPeriodic() {
     //Example code.  We'll probably want while !aprilTagSeen spin left and then follow it
-    // Drives forward at half speed until the robot has moved 5 feet, then stops:
-    if(encoder.getDistance() < 5) {
+    // Drives forward at half speed until the robot has moved 1 foot, then stops:
+    if(encoder.getDistance() < 1) {
       m_robotDrive.tankDrive(0.5, 0.5);
-  } else {
+    } else {
       m_robotDrive.tankDrive(0, 0);
-  }
+    }
   }
 }
