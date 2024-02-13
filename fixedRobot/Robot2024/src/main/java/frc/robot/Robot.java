@@ -61,7 +61,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    led = new LED();
+   led = new LED();
 
     m_frontLeftMotor.follow(m_rearLeftMotor);
     m_frontRightMotor.follow(m_rearRightMotor);
@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    led.LEDPeriodic();
+    //led.LEDPeriodic();
     m_robotDrive.tankDrive(stick.getRawAxis(1), stick.getRawAxis(5));
 
     winchAscender.set(VictorSPXControlMode.PercentOutput,stick.getRawAxis(RIGHT_BUMPER-LEFT_BUMPER));
@@ -104,8 +104,6 @@ public class Robot extends TimedRobot {
     // Drives forward at half speed until the robot has moved 1 foot, then stops:
     if(leftEncoder.getDistance() < 1 && rightEncoder.getDistance() < 1) {
       m_robotDrive.tankDrive(0.5, 0.5);
-      System.out.println(" " + leftEncoder.getDistance());
-    //  System.out.println(" " + rightEncoder.getDistance());
     } else {
       m_robotDrive.tankDrive(0, 0);
     }
