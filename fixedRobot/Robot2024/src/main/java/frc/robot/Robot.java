@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.Victor;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -93,8 +94,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     //led.LEDPeriodic();
     m_robotDrive.tankDrive(stick.getRawAxis(1), stick.getRawAxis(5));
-
-    winchAscender.set(VictorSPXControlMode.PercentOutput,stick.getRawAxis(RIGHT_BUMPER-LEFT_BUMPER));
+    winchControl();    
+    
 
     //Turn on the face
     // LED.LEDInit();
@@ -106,6 +107,18 @@ public class Robot extends TimedRobot {
       m_robotDrive.tankDrive(0.5, 0.5);
     } else {
       m_robotDrive.tankDrive(0, 0);
+    }
+  }
+
+  private void winchControl()
+  {
+    if(stick.getRawButton(RIGHT_BUMPER))
+    {
+      winchAscender.set(VictorSPXControlMode.PercentOutput, stick.getRawAxis(RIGHT_BUMPER));
+    }
+    else if(stick.getRawButton(LEFT_BUMPER))
+    {
+      winchAscender.set(VictorSPXControlMode.PercentOutput, stick.getRawAxis(LEFT_BUMPER));
     }
   }
 }
