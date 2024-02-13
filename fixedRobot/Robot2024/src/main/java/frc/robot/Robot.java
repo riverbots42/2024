@@ -27,7 +27,6 @@ public class Robot extends TimedRobot {
   final int LEFT_BUMPER = 5;
   final int RIGHT_BUMPER = 6;
   
-  
   VictorSPX winchAscender = new VictorSPX(5);
 
 
@@ -52,7 +51,9 @@ public class Robot extends TimedRobot {
 
   public LED led;
 
-  private final Encoder encoder = new Encoder(0, 1);
+  
+  private final Encoder rightEncoder = new Encoder(4, 5);
+  private final Encoder leftEncoder = new Encoder(6, 7);
 
  //THIS line breaks our code:
  // private final Ultrasonic m_ultrasonic = new Ultrasonic(ultrasonicPingPort, ultrasonicEchoPort);
@@ -82,8 +83,10 @@ public class Robot extends TimedRobot {
     m_frontRightMotor.setInverted(true);
     m_rearRightMotor.setInverted(true);
 
-    encoder.reset();
-    encoder.setDistancePerPulse(1./256.); //change this value to match whatever distance we want (256 pulse/rotation in SECONDS currently)
+    leftEncoder.reset();
+    rightEncoder.reset();
+    leftEncoder.setDistancePerPulse(1./256.); //change this value to match whatever distance we want (256 pulse/rotation in SECONDS currently)
+    rightEncoder.setDistancePerPulse(1./256.);
   }
 
   @Override
@@ -99,8 +102,10 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     //Example code.  We'll probably want while !aprilTagSeen spin left and then follow it
     // Drives forward at half speed until the robot has moved 1 foot, then stops:
-    if(encoder.getDistance() < 1) {
+    if(leftEncoder.getDistance() < 1 && rightEncoder.getDistance() < 1) {
       m_robotDrive.tankDrive(0.5, 0.5);
+      System.out.println(" " + leftEncoder.getDistance());
+    //  System.out.println(" " + rightEncoder.getDistance());
     } else {
       m_robotDrive.tankDrive(0, 0);
     }
