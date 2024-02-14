@@ -2,7 +2,14 @@
 
   (uuid 3dc08d4c-ee13-408f-80f7-dfc650c1a855)
 
-  (paper "A4")
+  (paper "USLetter")
+
+  (title_block
+    (title "The Stupid Ridiculously-Cheap Drive Encoder")
+    (date "2024-02-14")
+    (rev "1.0")
+    (company "Astoria HS Riverbots FRC #6845")
+  )
 
   (lib_symbols
     (symbol "Connector:Conn_01x03_Pin" (pin_names (offset 1.016) hide) (in_bom yes) (on_board yes)
