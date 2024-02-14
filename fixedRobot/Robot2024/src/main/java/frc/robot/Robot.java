@@ -99,6 +99,8 @@ public class Robot extends TimedRobot {
 
     //Turn on the face
     // LED.LEDInit();
+    m_frontRightMotor.setInverted(true);
+    m_rearRightMotor.setInverted(true);
   }
   public void autonomousPeriodic() {
     //Example code.  We'll probably want while !aprilTagSeen spin left and then follow it
