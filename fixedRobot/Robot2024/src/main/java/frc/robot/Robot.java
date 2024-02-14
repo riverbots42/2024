@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+//import com.revrobotics.CANSparkMax;
+//import com.revrobotics.CANSparkLowLevel.MotorType;
 
 //VictorSPX import stopped working again and I don't know why this time
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
@@ -26,13 +26,15 @@ public class Robot extends TimedRobot {
   final int RIGHT_BUMPER = 6;
   
   
-  VictorSPX winchAscender = new VictorSPX(5);
+//  VictorSPX winchAscender = new VictorSPX(5);
 
 
-  private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
+ /*  private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
   private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
   private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
   private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
+*/
+
  // PhotonCamera camera = new PhotonCamera("null"); // necesitamos una cámara
  
   // distance the robot wants to stay from an object
@@ -58,13 +60,13 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     led = new LED();
 
-    m_frontLeftMotor.follow(m_rearLeftMotor);
+  /*   m_frontLeftMotor.follow(m_rearLeftMotor);
     m_frontRightMotor.follow(m_rearRightMotor);
     
     SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
     SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
 
-    m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
+    m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor); */
     stick = new Joystick(0);
   }
   @Override
@@ -75,8 +77,8 @@ public class Robot extends TimedRobot {
     stick.setXChannel(1);
     stick.setYChannel(5);
 
-    m_frontRightMotor.setInverted(true);
-    m_rearRightMotor.setInverted(true);
+   // m_frontRightMotor.setInverted(true);
+   // m_rearRightMotor.setInverted(true);
   }
 
   @Override
@@ -84,7 +86,7 @@ public class Robot extends TimedRobot {
     led.LEDPeriodic();
     m_robotDrive.tankDrive(stick.getRawAxis(1), stick.getRawAxis(5));
 
-    winchAscender.set(VictorSPXControlMode.PercentOutput,stick.getRawAxis(RIGHT_BUMPER-LEFT_BUMPER));
+   // winchAscender.set(VictorSPXControlMode.PercentOutput,stick.getRawAxis(RIGHT_BUMPER-LEFT_BUMPER));
 
     //Turn on the face
     // LED.LEDInit();

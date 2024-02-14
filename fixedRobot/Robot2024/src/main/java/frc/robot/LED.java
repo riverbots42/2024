@@ -61,9 +61,9 @@ public class LED {
       int col = (idx / 3) % NUM_ROWS;
       int row = (idx / 3) / NUM_COLS;
 
-      red = pngMap[3*idx];
-      green = pngMap[3*idx + 1];
-      blue = pngMap[3*idx+2];
+      red = pngMap[idx];
+      green = pngMap[idx + 1];
+      blue = pngMap[idx+2];
       
       if((row + 1) % 2 == 0){ //if it's even
         int cur_index = 16 * (31-row) + col;
