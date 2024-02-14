@@ -92,13 +92,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    //led.LEDPeriodic();
-    m_robotDrive.tankDrive(stick.getRawAxis(1), stick.getRawAxis(5));
+    parabolicDrive();
     winchControl();    
-    
 
-    //Turn on the face
-    // LED.LEDInit();
+    //led.LEDPeriodic();
+    // LED.LEDInit(); //Turn on the face
     m_frontRightMotor.setInverted(true);
     m_rearRightMotor.setInverted(true);
   }
@@ -121,6 +119,28 @@ public class Robot extends TimedRobot {
     else if(stick.getRawButton(LEFT_BUMPER))
     {
       winchAscender.set(VictorSPXControlMode.PercentOutput, stick.getRawAxis(LEFT_BUMPER));
+    }
+  }
+  private void parabolicDrive()
+  {
+    leftStickSpeed = stick.getRawAxis(1);
+    rightStickSpeed = stick.getRawAxis(5);
+    //Parabolic all going forwards
+    m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed);
+    //Parabolic left back
+    if(leftStickSpeed < 0)
+    {
+      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed);
+    }
+    //Parabolic right back
+    if(rightStickSpeed < 0)
+    {
+      m_robotDrive.tanlDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed * -1);
+    }
+    //Parabolic all going backwards
+    if(leftStickSpeed < 0 && rightStickSpeed < 0)
+    {
+      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed * -1);
     }
   }
 }
