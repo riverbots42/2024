@@ -2,11 +2,18 @@ package frc.robot;
 
 
 import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import java.util.List;
 
@@ -25,14 +32,22 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 public class Robot extends TimedRobot {
   private DifferentialDrive m_robotDrive;
   private Joystick stick;
-  
 
-  //https://codedocs.revrobotics.com/java/com/revrobotics/package-summary.html
-  private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
-  private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
-  private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
-  private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
-  PhotonCamera camera = new PhotonCamera("null"); // necesitamos una cámara
+  final int LEFT_BUMPER = 5;
+  final int RIGHT_BUMPER = 6;
+  final int Y_BUTTON = 4;
+  private final DoubleSolenoid m_doubleSolenoid = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 1,   2);
+
+//  VictorSPX winchAscender = new VictorSPX(5);
+
+
+  //private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
+  //private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
+  //private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
+  //private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
+
+  NetworkTableInstance inst = NetworkTableInstance.getDefault();
+  //PhotonCamera camera = new PhotonCamera(inst, "HD_USB_Camera"); // necesitamos una cámara
  
   // distance the robot wants to stay from an object
   // (one meter)
@@ -54,9 +69,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    // addFollower merges left motors and right motors.
-    //temporarly gone to get to work? 
-    m_frontLeftMotor.follow(m_rearLeftMotor);
+    led = new LED();
+    
+
+// start a NT4 client
+    inst.startClient4("example client");
+
+// connect to a roboRIO with team number TEAM
+    inst.setServerTeam(6845);
+
+// starting a DS client will try to get the roboRIO address from the DS application
+    inst.startDSClient(); 
+
+// connect to a specific host/port
+    //inst.setServer("host", NetworkTableInstance.kDefaultPort4);
+    
+  /*   m_frontLeftMotor.follow(m_rearLeftMotor);
     m_frontRightMotor.follow(m_rearRightMotor);
     
     SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
@@ -85,7 +113,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-        /* 
+    //led.LEDPeriodic();
+    //m_robotDrive.tankDrive(stick.getRawAxis(1), stick.getRawAxis(5));
+
+   // winchAscender.set(VictorSPXControlMode.PercentOutput,stick.getRawAxis(RIGHT_BUMPER-LEFT_BUMPER));
+   // When Y button pressed toggle Solenoid.
+   if (stick.getRawButtonPressed(4)) {
+    System.out.println("Y button Pressed: Forward");
+    m_doubleSolenoid.set(DoubleSolenoid.Value.kForward);
+    
+ }
+ if (stick.getRawButtonPressed(3  )) {
+    System.out.println("X button Pressed: Reverse");
+    m_doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+    
+ }
+ /*
     var result = camera.getLatestResult();
     boolean hasTargets = result.hasTargets();
     if(hasTargets)
@@ -98,10 +141,9 @@ public class Robot extends TimedRobot {
       double skew = target.getSkew();
       int targetID = target.getFiducialId();
       System.out.println(targetID);
-    }
-    */
-    
-    m_robotDrive.tankDrive(stick.getRawAxis(1), stick.getRawAxis(5));
+    } */
+    //Turn on the face
+    // LED.LEDInit();
   }
   public void autonomousPeriodic() {
     // Do something
