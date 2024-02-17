@@ -51,9 +51,9 @@ public class Main
         // This will eventually hold something like "new Frame(new int[] { ###, ###, ... })"
         StringBuilder ret = new StringBuilder("new Frame(new int[] {");
         // Now we generate the list of ints to put in the file.
-        for (int row = 0; row < height; row++) 
+        for (int col = 0; col < width; col++) 
         {
-            for (int col = 0; col < width; col++) 
+            for (int row = 0; row < height; row++) 
             {
                 if (row != 0 || col != 0) {
                     ret.append(",");
