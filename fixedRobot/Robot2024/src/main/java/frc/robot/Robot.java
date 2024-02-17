@@ -88,6 +88,8 @@ public class Robot extends TimedRobot {
     rightEncoder.reset();
     leftEncoder.setDistancePerPulse(1./256.); //change this value to match whatever distance we want (256 pulse/rotation in SECONDS currently)
     rightEncoder.setDistancePerPulse(1./256.);
+    m_frontRightMotor.setInverted(true);
+    m_rearRightMotor.setInverted(true);
   }
 
   @Override
@@ -97,8 +99,7 @@ public class Robot extends TimedRobot {
 
     //led.LEDPeriodic();
     // LED.LEDInit(); //Turn on the face
-    m_frontRightMotor.setInverted(true);
-    m_rearRightMotor.setInverted(true);
+    
   }
   public void autonomousPeriodic() {
     //Example code.  We'll probably want while !aprilTagSeen spin left and then follow it
@@ -123,8 +124,8 @@ public class Robot extends TimedRobot {
   }
   private void parabolicDrive()
   {
-    leftStickSpeed = stick.getRawAxis(1);
-    rightStickSpeed = stick.getRawAxis(5);
+    double leftStickSpeed = stick.getRawAxis(1);
+    double rightStickSpeed = stick.getRawAxis(5);
     //Parabolic all going forwards
     m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed);
     //Parabolic left back
@@ -135,7 +136,7 @@ public class Robot extends TimedRobot {
     //Parabolic right back
     if(rightStickSpeed < 0)
     {
-      m_robotDrive.tanlDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed * -1);
+      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed * -1);
     }
     //Parabolic all going backwards
     if(leftStickSpeed < 0 && rightStickSpeed < 0)
