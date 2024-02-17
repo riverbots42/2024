@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
 public class LED {
+    AnimationList animations = new AnimationList();
+
     public AddressableLED m_led = new AddressableLED(8);
     public  AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(512);
     int idx;
@@ -49,7 +51,8 @@ public class LED {
       m_led.setData(m_ledBuffer);
       idx = 0;
     }
-
+  
+    //Syncronize 
   public void LEDPeriodic() {
     int red = 0;
     int green = 0;
