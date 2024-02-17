@@ -1,6 +1,6 @@
 /**
  * Program to scan the current directory for subdirectories and generate
- * an Animations.java that contains all animations (lists of PNGs)
+ * an AnimationList.java that contains all animations (lists of PNGs)
  * discovered.
 **/
 
@@ -72,7 +72,7 @@ public class Main
 
     /**
      * Look in the current directory for subdirectories and .png files therein and generate
-     * an Animations.java that has all the raw data therefrom.
+     * an AnimationList.java that has all the raw data therefrom.
     **/
     public static void main(String args[])
     {
@@ -119,7 +119,7 @@ public class Main
         }
         try
         {
-            BufferedReader template = new BufferedReader(new FileReader("Animations.tmpl"));
+            BufferedReader template = new BufferedReader(new FileReader("AnimationList.tmpl"));
             String line = template.readLine();
             while(line != null)
             {

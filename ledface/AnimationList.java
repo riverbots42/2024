@@ -6,11 +6,11 @@ package frc.robot;
 
 import java.util.*;
 
-public class Animations
+public class AnimationList
 {
     public TreeMap<String,Animation> animations;
 
-    public Animations() {
+    public AnimationList() {
         animations = new TreeMap<String,Animation>();
         ArrayList<Frame> crinkling_eyes = new ArrayList<Frame>();
         // 01_crinkling_eyes.png Frame # 1
