@@ -55,27 +55,50 @@ public class LED {
     int green = 0;
     int blue = 0;
     final int NUM_ROWS = 16;
-    final int NUM_COLS = 31;
-
-    for(int idx = 0; idx < pngMap.length/3; idx++) {
+    final int NUM_COLS = 32;
+    for(int x = 0; x<NUM_COLS; x++) {
+      for(int y = 0; y<NUM_ROWS; y++) {
+        int base = 3 * (x * NUM_ROWS + y);
+        
+        red = pngMap[base]/3;
+        green = pngMap[base+1]/3;
+        blue = pngMap[base+2]/3;
+        int led_idx = x * NUM_ROWS + y;
+        if( x % 2 == 1 ) {
+          led_idx = (x * NUM_ROWS + (NUM_ROWS - y - 1));
+        }
+        m_ledBuffer.setRGB(led_idx, red/2, green/2, blue/2);
+       /*  if(x == 16) {
+          System.out.printf("%d, %d = %d\n", x, y, led_idx);
+          m_ledBuffer.setRGB(led_idx, y*16, y*16, 255);
+        }*/
+        
+       // m_ledBuffer.setRGB(base/3, 8*x/3, 4*y/3, 127);
+      }
+    }
+    /*
+    for(int idx = 0; idx < pngMap.length/3; idx+=3) {
       int col = (idx / 3) % NUM_ROWS;
-      int row = (idx / 3) / NUM_COLS;
+      int row = (idx / 3) / NUM_ROWS;
+      if(idx < 60)
+        System.out.printf("%d = %d, %d\n", idx, col, row);
 
       red = pngMap[idx];
       green = pngMap[idx + 1];
-      blue = pngMap[idx+2];
-      
+      blue = pngMap[idx + 2];
+      m_ledBuffer.setRGB(idx/3, red, green, blue);
       if((row + 1) % 2 == 0){ //if it's even
         int cur_index = 16 * (31-row) + col;
         System.out.println("Even Index: " + cur_index);
-        m_ledBuffer.setRGB(cur_index*3, red, green , blue );
+        m_ledBuffer.setRGB(cur_index, red, green , blue );
       } else {
         int cur_index = 16 * (31-row) + (15-col);
         System.out.println("Odd Index: " + cur_index);
-        m_ledBuffer.setRGB(cur_index*3, red, green, blue );
+        m_ledBuffer.setRGB(cur_index, red, green, blue );
       }
     }
+    */
     m_led.setData(m_ledBuffer);
-   // cur_index = 0;
+    cur_index = 0;
   }
 }
