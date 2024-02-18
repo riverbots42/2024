@@ -104,24 +104,34 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     //Example code.  We'll probably want while !aprilTagSeen spin left and then follow it
     // Drives forward at half speed until the robot has moved 1 foot, then stops:
-    if(leftEncoder.getDistance() < 1 && rightEncoder.getDistance() < 1) {
+    if(/*leftEncoder.getDistance() < 1 && */rightEncoder.getDistance() < 1) {
       m_robotDrive.tankDrive(0.5, 0.5);
     } else {
       m_robotDrive.tankDrive(0, 0);
     }
+    System.out.println(rightEncoder.getDistance());
   }
 
   private void winchControl()
   {
-    if(stick.getRawButton(RIGHT_BUMPER))
+    if(stick.getRawButton(LEFT_BUMPER) && stick.getRawButton(RIGHT_BUMPER)) //If both pressed do nothing
     {
-      winchAscender.set(VictorSPXControlMode.PercentOutput, stick.getRawAxis(RIGHT_BUMPER));
+      winchAscender.set(VictorSPXControlMode.PercentOutput, 0.0);
     }
-    else if(stick.getRawButton(LEFT_BUMPER))
+    else if(stick.getRawButton(LEFT_BUMPER)) //Left goes down (edit if changed)
     {
-      winchAscender.set(VictorSPXControlMode.PercentOutput, stick.getRawAxis(LEFT_BUMPER));
+      winchAscender.set(VictorSPXControlMode.PercentOutput, -1.0);
+    }
+    else if(stick.getRawButton(RIGHT_BUMPER)) //Right goes up (edit if changed)
+    {
+      winchAscender.set(VictorSPXControlMode.PercentOutput, 1.0);
+    }
+    else //turn off
+    {
+      winchAscender.set(VictorSPXControlMode.PercentOutput, 0.0);
     }
   }
+  
   private void parabolicDrive()
   {
     double leftStickSpeed = stick.getRawAxis(1);
