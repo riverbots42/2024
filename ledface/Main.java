@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 
 public class Main
 {
+    public static int DEFAULT_WIDTH = 32;
+    public static int DEFAULT_HEIGHT = 16;
     /**
      * Return a TreeMap of all the identifiers/filenames found mathing *.png
      * in a given directory.
@@ -44,10 +46,16 @@ public class Main
      * @param img the BufferedImage to convert to source.
      * @return a Java source code line.
     **/
-    public static String imageToSource(String id, BufferedImage img)
+    public static String imageToSource(String id, BufferedImage img) throws Exception
     {
         int width = img.getWidth();
         int height = img.getHeight();
+        if( width != DEFAULT_WIDTH) {
+            throw new Exception("Invalid image width!");
+        }
+        if( height != DEFAULT_HEIGHT) {
+            throw new Exception("Invalid image height!");
+        }
         // This will eventually hold something like "private static int[] id = new int[] { ###, ###, ... })"
         StringBuilder ret = new StringBuilder("    private static int[] ");
         ret.append(id);
@@ -110,7 +118,7 @@ public class Main
                         constants.append(imageToSource(fid, frame));
                         constants.append("\n");
                     } 
-                    catch(IOException E) 
+                    catch(Exception E) 
                     {
                         E.printStackTrace();
                     }
