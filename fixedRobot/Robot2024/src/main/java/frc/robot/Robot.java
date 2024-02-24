@@ -1,7 +1,9 @@
 package frc.robot;
 
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableRegistry;
@@ -18,6 +20,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import java.util.List;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 //import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax; If we ever want to use PWM again
@@ -31,6 +34,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
  */
 public class Robot extends TimedRobot {
   private DifferentialDrive m_robotDrive;
+  private DifferentialDrive autonomousDrive;
+
   private Joystick stick;
 
   final int LEFT_BUMPER = 5;
@@ -48,7 +53,10 @@ public class Robot extends TimedRobot {
 
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
   PhotonCamera camera = new PhotonCamera(inst, "HD_USB_Camera 2"); // necesitamos una cámara
- 
+  
+  final double ANGULAR_P = 0.1;
+  final double ANGULAR_D = 0.0;
+  PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
   // distance the robot wants to stay from an object
   // (one meter)
  // Ultrasonic info: https://docs.wpilib.org/en/stable/docs/software/hardware-apis/sensors/ultrasonics-software.html#ultrasonics-software
@@ -103,6 +111,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     //What's this?
     // TODO Auto-generated method stub 
+
+    //autonomousDrive = new DifferentialDrive(leftMotor, rightMotor);
     super.autonomousInit();
     stick.setXChannel(1);
     stick.setYChannel(5);
@@ -158,6 +168,29 @@ public class Robot extends TimedRobot {
     // LED.LEDInit();
   }
   public void autonomousPeriodic() {
-    // Do something
+   
+    double forwardSpeed = 0.1;
+    double rotationSpeed = 0;
+    double range = 0;
+    var result = camera.getLatestResult();
+
+    if (result.hasTargets()) {
+      // Calculate angular turn power
+      // -1.0 required to ensure positive PID controller effort _increases_ yaw
+      //rotationSpeed = -turnController.calculate(result.getBestTarget().getYaw(), 0);
+      range = PhotonUtils.calculateDistanceToTargetMeters(
+          0.35,
+          1.5,
+          Units.degreesToRadians(2.0),
+          Units.degreesToRadians(result.getBestTarget().getPitch()));
+    } 
+    
+    else {
+      // If we have no targets, stay still.
+    rotationSpeed = 0;
+    }
+    System.out.println(range);
+    //System.out.println("Rotation Speed: " + rotationSpeed);
+    //autonomousDrive.arcadeDrive(forwardSpeed, rotationSpeed);
   }
 }
