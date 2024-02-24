@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
   final int LEFT_BUMPER = 5;
   final int RIGHT_BUMPER = 6;
   final int Y_BUTTON = 4;
-  private final DoubleSolenoid m_doubleSolenoid = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 1,   2);
+  //private final DoubleSolenoid m_doubleSolenoid = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 1,   2);
 
 //  VictorSPX winchAscender = new VictorSPX(5);
 
@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
   //private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
 
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
-  //PhotonCamera camera = new PhotonCamera(inst, "HD_USB_Camera"); // necesitamos una cámara
+  PhotonCamera camera = new PhotonCamera(inst, "HD_USB_Camera 2"); // necesitamos una cámara
  
   // distance the robot wants to stay from an object
   // (one meter)
@@ -69,7 +69,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    led = new LED();
+    //led = new LED();
     
 
 // start a NT4 client
@@ -84,7 +84,7 @@ public class Robot extends TimedRobot {
 // connect to a specific host/port
     //inst.setServer("host", NetworkTableInstance.kDefaultPort4);
     
-  /*   m_frontLeftMotor.follow(m_rearLeftMotor);
+    /*m_frontLeftMotor.follow(m_rearLeftMotor);
     m_frontRightMotor.follow(m_rearRightMotor);
     
     SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
@@ -95,7 +95,7 @@ public class Robot extends TimedRobot {
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
       
-    m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
+    m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);*/
     stick = new Joystick(0);
     
   }
@@ -106,9 +106,9 @@ public class Robot extends TimedRobot {
     super.autonomousInit();
     stick.setXChannel(1);
     stick.setYChannel(5);
-
+    /* 
     m_frontRightMotor.setInverted(true);
-    m_rearRightMotor.setInverted(true);
+    m_rearRightMotor.setInverted(true);*/
   }
 
   @Override
@@ -118,6 +118,7 @@ public class Robot extends TimedRobot {
 
    // winchAscender.set(VictorSPXControlMode.PercentOutput,stick.getRawAxis(RIGHT_BUMPER-LEFT_BUMPER));
    // When Y button pressed toggle Solenoid.
+   /*
    if (stick.getRawButtonPressed(4)) {
     System.out.println("Y button Pressed: Forward");
     m_doubleSolenoid.set(DoubleSolenoid.Value.kForward);
@@ -127,12 +128,13 @@ public class Robot extends TimedRobot {
     System.out.println("X button Pressed: Reverse");
     m_doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
     
- }
- /*
+ }*/
+ 
     var result = camera.getLatestResult();
     boolean hasTargets = result.hasTargets();
     if(hasTargets)
     {
+       
       List<PhotonTrackedTarget> targets = result.getTargets();
       PhotonTrackedTarget target = result.getBestTarget();
       double yaw = target.getYaw();
@@ -140,8 +142,18 @@ public class Robot extends TimedRobot {
       double area = target.getArea();
       double skew = target.getSkew();
       int targetID = target.getFiducialId();
-      System.out.println(targetID);
-    } */
+     
+      System.out.println("\nTargetID: " + targetID + "\n");
+      System.out.println("Target: ");
+      System.out.println("Yaw: " + yaw);
+      System.out.println("Pitch: " + pitch);
+      System.out.println("Area: " + area);
+      System.out.println("Skew: " + skew);
+
+    } 
+    else{
+      System.out.println("No Targets");
+    }
     //Turn on the face
     // LED.LEDInit();
   }
