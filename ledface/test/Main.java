@@ -6,7 +6,7 @@ public class Main
 {
     public static void main(String args[])
     {
-        Animations anim = new Animations();
+        AnimationList anim = new AnimationList();
         System.out.printf("Loaded %d animations successfully:\n", anim.animations.size());
         Iterator<String> keys = anim.animations.keySet().iterator();
         while(keys.hasNext())

@@ -1,6 +1,6 @@
 /**
  * Program to scan the current directory for subdirectories and generate
- * an Animations.java that contains all animations (lists of PNGs)
+ * an AnimationList.java that contains all animations (lists of PNGs)
  * discovered.
 **/
 
@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 
 public class Main
 {
+    public static int DEFAULT_WIDTH = 32;
+    public static int DEFAULT_HEIGHT = 16;
     /**
      * Return a TreeMap of all the identifiers/filenames found mathing *.png
      * in a given directory.
@@ -39,17 +41,25 @@ public class Main
     /**
      * Given a BufferedImage, convert it to a list of integers (r0, g0, b0, r1, g1, b1, ...)
      * and then generate a Java source snippet of the form:
-     *     new Frame(new int[] { r0, g0, b0, r1, g1, b1, ... })
+     *     private static int[] id = new int[] { r0, g0, b0, r1, g1, b1, ... })
      *
      * @param img the BufferedImage to convert to source.
      * @return a Java source code line.
     **/
-    public static String imageToSource(BufferedImage img)
+    public static String imageToSource(String id, BufferedImage img) throws Exception
     {
         int width = img.getWidth();
         int height = img.getHeight();
-        // This will eventually hold something like "new Frame(new int[] { ###, ###, ... })"
-        StringBuilder ret = new StringBuilder("new Frame(new int[] {");
+        if( width != DEFAULT_WIDTH) {
+            throw new Exception("Invalid image width!");
+        }
+        if( height != DEFAULT_HEIGHT) {
+            throw new Exception("Invalid image height!");
+        }
+        // This will eventually hold something like "private static int[] id = new int[] { ###, ###, ... })"
+        StringBuilder ret = new StringBuilder("    private static int[] ");
+        ret.append(id);
+        ret.append("() { return new int[] {");
         // Now we generate the list of ints to put in the file.
         for (int col = 0; col < width; col++) 
         {
@@ -66,17 +76,18 @@ public class Main
             }
         }
         // Finally we close with the "}"
-        ret.append("})");
+        ret.append(" }; }\n");
         return ret.toString();
     }
 
     /**
      * Look in the current directory for subdirectories and .png files therein and generate
-     * an Animations.java that has all the raw data therefrom.
+     * an AnimationList.java that has all the raw data therefrom.
     **/
     public static void main(String args[])
     {
         File files[] = new File(".").listFiles();
+        StringBuilder constants = new StringBuilder();
         StringBuilder data = new StringBuilder();
         for(int j=0; j<files.length; j++)
         {
@@ -96,35 +107,36 @@ public class Main
                     String key = i.next();
                     try 
                     {
+                        StringBuffer fid_buf = new StringBuffer(id);
+                        fid_buf.append("__"); fid_buf.append(frameCount);
+                        String fid = fid_buf.toString();
                         File frameFile = new File(files[j], rereturn.get(key));
                         BufferedImage frame = ImageIO.read(frameFile);
                         data.append("        // "); data.append(frameFile.getName());
                         data.append(" Frame # "); data.append(frameCount); data.append("\n");
-                        data.append("        "); data.append(id); data.append(".add(");
-                        data.append(imageToSource(frame));
-                        data.append(");\n");
-                        if(i.hasNext())
-                        {
-                            data.append(",");
-                        }
-                        data.append("\n");
+                        data.append("        "); data.append(id); data.append(".add(new Frame("); data.append(fid); data.append("()));\n");
+                        constants.append(imageToSource(fid, frame));
+                        constants.append("\n");
                     } 
-                    catch(IOException E) 
+                    catch(Exception E) 
                     {
                         E.printStackTrace();
                     }
+                    frameCount++;
                 }
                 data.append("        animations.put(\""); data.append(id); data.append("\", new Animation("); data.append(id); data.append("));\n");
             }
         }
         try
         {
-            BufferedReader template = new BufferedReader(new FileReader("Animations.tmpl"));
+            BufferedReader template = new BufferedReader(new FileReader("AnimationList.tmpl"));
             String line = template.readLine();
             while(line != null)
             {
                 if(line.startsWith("// TEMPLATE:"))
                     ;
+                else if(line.startsWith("// CONSTANTS:"))
+                    System.out.println(constants.toString());
                 else if(line.startsWith("// DATA:"))
                     System.out.println(data.toString());
                 else
