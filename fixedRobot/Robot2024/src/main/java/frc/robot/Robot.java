@@ -5,6 +5,7 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.Ultrasonic;
 
 import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -56,6 +57,11 @@ public class Robot extends TimedRobot {
   private final Encoder rightEncoder = new Encoder(4, 5);
   private final Encoder leftEncoder = new Encoder(6, 7);
 
+  private final DigitalInput pathSetterOne = new DigitalInput(1);
+  private final DigitalInput pathSetterTwo = new DigitalInput(2);
+  final double DISTANCE_TO_AMP = 43.8; //inches
+  private int robotFieldPosition = 0;
+
  //THIS line breaks our code:
  // private final Ultrasonic m_ultrasonic = new Ultrasonic(ultrasonicPingPort, ultrasonicEchoPort);
  //Maybe it'll work better after we actually have an ultrasonic sensor
@@ -80,7 +86,8 @@ public class Robot extends TimedRobot {
     super.autonomousInit();
     stick.setXChannel(1);
     stick.setYChannel(5);
-
+    
+    //why do we have 2 inverts?? 
     m_frontRightMotor.setInverted(true);
     m_rearRightMotor.setInverted(true);
 
@@ -88,8 +95,13 @@ public class Robot extends TimedRobot {
     rightEncoder.reset();
     leftEncoder.setDistancePerPulse(1./256.); //change this value to match whatever distance we want (256 pulse/rotation in SECONDS currently)
     rightEncoder.setDistancePerPulse(1./256.);
+
+    //second invert??? 
     m_frontRightMotor.setInverted(true);
     m_rearRightMotor.setInverted(true);
+
+    robotFieldPosition = pathChoice();
+    
   }
 
   @Override
@@ -102,14 +114,23 @@ public class Robot extends TimedRobot {
     
   }
   public void autonomousPeriodic() {
-    //Example code.  We'll probably want while !aprilTagSeen spin left and then follow it
-    // Drives forward at half speed until the robot has moved 1 foot, then stops:
-    if(/*leftEncoder.getDistance() < 1 && */rightEncoder.getDistance() < 1) {
-      m_robotDrive.tankDrive(0.5, 0.5);
-    } else {
-      m_robotDrive.tankDrive(0, 0);
+    switch(robotFieldPosition){
+      case 0: //do nothing
+        m_robotDrive.tankDrive(0, 0);
+        break;
+      case 1: //score in amp, then drive outside of starting position
+        autonomousPathwayAmpPosition();
+        m_robotDrive.tankDrive(0, 0); //stop at end.  Probably include in method
+        break;
+      case 2: //do something
+        autonomousPathwayMiddlePosition();
+        m_robotDrive.tankDrive(0, 0);
+        break;
+      case 3: //leave starting position
+        autonomousPathwayFarFromAmpPosition();
+        m_robotDrive.tankDrive(0, 0);
+        break;
     }
-    System.out.println(rightEncoder.getDistance());
   }
 
   private void winchControl()
@@ -153,5 +174,49 @@ public class Robot extends TimedRobot {
     {
       m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed * -1);
     }
+  }
+
+  private int pathChoice()
+  {
+    int pathSelection = 0;
+    if(pathSetterOne.get() && pathSetterTwo.get())
+    {
+      pathSelection = 1;
+    }
+    else if(pathSetterOne.get() && !pathSetterTwo.get())
+    {
+      pathSelection = 2;
+    }
+    else if(!pathSetterOne.get() && pathSetterTwo.get())
+    {
+      pathSelection = 3;
+    }
+    return pathSelection;
+  }
+
+  private void autonomousPathwayAmpPosition()
+  {
+    //Example code.  We'll probably want while !aprilTagSeen spin left and then follow it
+    // Drives forward at half speed until the robot has moved 1 foot, then stops:
+    if(leftEncoder.getDistance() < 1 && rightEncoder.getDistance() < 1) {
+      m_robotDrive.tankDrive(0.5, 0.5);
+    } else {
+      m_robotDrive.tankDrive(0, 0);
+    }
+
+    /*while(aprilTagSeen == false)
+      {
+        m_robotDrive.tankDrive(-0.25, 0.25);
+      }*/
+  }
+
+  private void autonomousPathwayMiddlePosition()
+  {
+
+  }
+  
+  private void autonomousPathwayFarFromAmpPosition()
+  {
+
   }
 }
