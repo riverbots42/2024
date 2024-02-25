@@ -60,14 +60,35 @@ public class Main
             File outfile = new File(String.format("%s/%s__%03d.png", pngdir, pngdir, Integer.valueOf(i)));
             BufferedImage srcimg = frames[i].getImage();
             BufferedImage dstimg = new BufferedImage(DEFAULT_WIDTH, DEFAULT_HEIGHT, BufferedImage.TYPE_INT_RGB);
-            int skip_x = srcimg.getWidth() / DEFAULT_HEIGHT;
-            int skip_y = srcimg.getHeight() / DEFAULT_HEIGHT;
-            for(int x=0; x<DEFAULT_WIDTH/2; x++)
+            double aspect_src = 1.0 * srcimg.getWidth() / srcimg.getHeight();
+            double aspect_dst = 1.0 * dstimg.getWidth() / dstimg.getHeight();
+            double skip = 0.0;
+            // We need to either center things horizontally or vertically, but still deal with the possibility that we have
+            // a perfect 32x16 GIF.
+            if(aspect_src > aspect_dst)
+            {
+                skip = srcimg.getWidth() / dstimg.getWidth();
+            }
+            else
+            {
+                skip = srcimg.getHeight() / dstimg.getHeight();
+            }
+            int margin_x = (DEFAULT_WIDTH - (int)(srcimg.getWidth()/skip)) / 2;
+            int margin_y = (DEFAULT_HEIGHT - (int)(srcimg.getHeight()/skip)) / 2;
+            for(int x=0; x<DEFAULT_WIDTH; x++)
             {
                 for(int y=0; y<DEFAULT_HEIGHT; y++)
                 {
-                    int rgb = srcimg.getRGB(x * skip_x + 2, y*skip_y + 2);
-                    dstimg.setRGB(DEFAULT_WIDTH/4 + x, y, rgb);
+                    // With the 320x320 images, we need to try to get *just barely* inside the square rather than reading the
+                    // border of the square itself.
+                    int xx = (int)(x*skip + 0.4 * skip);
+                    int yy = (int)(y*skip + 0.4 * skip);
+                    if(xx < 0 || xx >= srcimg.getWidth() || yy < 0 || yy >= srcimg.getHeight())
+                    {
+                        continue;
+                    }
+                    int rgb = srcimg.getRGB(xx, yy);
+                    dstimg.setRGB(margin_x + x, margin_y + y, rgb);
                 }
             }
             ImageIO.write(dstimg, "png", outfile);
