@@ -1,8 +1,8 @@
 package frc.robot;
 
 
-import edu.wpi.first.math.filter.MedianFilter;
-import edu.wpi.first.wpilibj.Ultrasonic;
+//import edu.wpi.first.math.filter.MedianFilter;
+//import edu.wpi.first.wpilibj.Ultrasonic;
 
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -43,13 +43,13 @@ public class Robot extends TimedRobot {
  // Ultrasonic info: https://docs.wpilib.org/en/stable/docs/software/hardware-apis/sensors/ultrasonics-software.html#ultrasonics-software
   static final double kHoldDistanceMillimeters = 1.0e3;
   
-  Ultrasonic m_rangeFinder = new Ultrasonic(1, 2);
-  double distanceMillimeters = m_rangeFinder.getRangeMM();
+  //Ultrasonic m_rangeFinder = new Ultrasonic(1, 2);
+  //double distanceMillimeters = m_rangeFinder.getRangeMM();
   final int ultrasonicPingPort = 0;
   final int ultrasonicEchoPort = 1;
   // Ultrasonic sensors tend to be quite noisy and susceptible to sudden outliers,
   // so measurements are filtered with a 5-sample median filter
-  private final MedianFilter m_filter = new MedianFilter(5);
+  //private final MedianFilter m_filter = new MedianFilter(5);
 
   public LED led;
 
@@ -113,22 +113,23 @@ public class Robot extends TimedRobot {
     // LED.LEDInit(); //Turn on the face
     
   }
+  public void stopRobot()
+  {
+    m_robotDrive.tankDrive(0, 0);
+  }
   public void autonomousPeriodic() {
     switch(robotFieldPosition){
       case 0: //do nothing
-        m_robotDrive.tankDrive(0, 0);
+        stopRobot();
         break;
       case 1: //score in amp, then drive outside of starting position
         autonomousPathwayAmpPosition();
-        m_robotDrive.tankDrive(0, 0); //stop at end.  Probably include in method
         break;
       case 2: //do something
         autonomousPathwayMiddlePosition();
-        m_robotDrive.tankDrive(0, 0);
         break;
       case 3: //leave starting position
         autonomousPathwayFarFromAmpPosition();
-        m_robotDrive.tankDrive(0, 0);
         break;
     }
   }
@@ -200,8 +201,9 @@ public class Robot extends TimedRobot {
     // Drives forward at half speed until the robot has moved 1 foot, then stops:
     if(leftEncoder.getDistance() < 1 && rightEncoder.getDistance() < 1) {
       m_robotDrive.tankDrive(0.5, 0.5);
+      System.out.println("HI");
     } else {
-      m_robotDrive.tankDrive(0, 0);
+      stopRobot();
     }
 
     /*while(aprilTagSeen == false)
@@ -212,11 +214,15 @@ public class Robot extends TimedRobot {
 
   private void autonomousPathwayMiddlePosition()
   {
-
+    if(leftEncoder.getDistance() > -1 && rightEncoder.getDistance() > -1) {
+      m_robotDrive.tankDrive(0.5, 0.5);
+    } else {
+      stopRobot();
+    }
   }
   
   private void autonomousPathwayFarFromAmpPosition()
   {
-
+    stopRobot();
   }
 }
