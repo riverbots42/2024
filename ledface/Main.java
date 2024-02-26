@@ -1,3 +1,5 @@
+package frc.robot;
+
 /**
  * Program to scan the current directory for subdirectories and generate
  * an AnimationList.java that contains all animations (lists of PNGs)

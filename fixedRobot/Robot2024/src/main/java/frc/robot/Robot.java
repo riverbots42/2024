@@ -28,13 +28,14 @@ public class Robot extends TimedRobot {
   final int LEFT_BUMPER = 5;
   final int RIGHT_BUMPER = 6;
   
-  VictorSPX winchAscender = new VictorSPX(5);
+  //VictorSPX winchAscender = new VictorSPX(5);
 
+  AnimationList animationlist = new AnimationList();
 
-  private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
-  private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
-  private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
-  private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
+  //private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
+  //private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
+  //private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
+  //private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
  // PhotonCamera camera = new PhotonCamera("null"); // necesitamos una cámara
  
   // distance the robot wants to stay from an object
@@ -42,19 +43,19 @@ public class Robot extends TimedRobot {
  // Ultrasonic info: https://docs.wpilib.org/en/stable/docs/software/hardware-apis/sensors/ultrasonics-software.html#ultrasonics-software
   static final double kHoldDistanceMillimeters = 1.0e3;
   
-  Ultrasonic m_rangeFinder = new Ultrasonic(1, 2);
-  double distanceMillimeters = m_rangeFinder.getRangeMM();
+  //Ultrasonic m_rangeFinder = new Ultrasonic(1, 2);
+  //double distanceMillimeters = m_rangeFinder.getRangeMM();
   final int ultrasonicPingPort = 0;
   final int ultrasonicEchoPort = 1;
   // Ultrasonic sensors tend to be quite noisy and susceptible to sudden outliers,
   // so measurements are filtered with a 5-sample median filter
-  private final MedianFilter m_filter = new MedianFilter(5);
+ // private final MedianFilter m_filter = new MedianFilter(5);
 
   public LED led;
 
   
-  private final Encoder rightEncoder = new Encoder(4, 5);
-  private final Encoder leftEncoder = new Encoder(6, 7);
+  //private final Encoder rightEncoder = new Encoder(4, 5);
+  //private final Encoder leftEncoder = new Encoder(6, 7);
 
  //THIS line breaks our code:
  // private final Ultrasonic m_ultrasonic = new Ultrasonic(ultrasonicPingPort, ultrasonicEchoPort);
@@ -64,13 +65,13 @@ public class Robot extends TimedRobot {
   public void robotInit() {
    led = new LED();
 
-    m_frontLeftMotor.follow(m_rearLeftMotor);
-    m_frontRightMotor.follow(m_rearRightMotor);
+    //m_frontLeftMotor.follow(m_rearLeftMotor);
+    //m_frontRightMotor.follow(m_rearRightMotor);
     
-    SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
-    SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
+    //SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
+    //SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
 
-    m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
+    //m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
     stick = new Joystick(0);
   }
   @Override
@@ -81,31 +82,32 @@ public class Robot extends TimedRobot {
     stick.setXChannel(1);
     stick.setYChannel(5);
 
-    m_frontRightMotor.setInverted(true);
-    m_rearRightMotor.setInverted(true);
+    //m_frontRightMotor.setInverted(true);
+    //m_rearRightMotor.setInverted(true);
 
-    leftEncoder.reset();
-    rightEncoder.reset();
-    leftEncoder.setDistancePerPulse(1./256.); //change this value to match whatever distance we want (256 pulse/rotation in SECONDS currently)
-    rightEncoder.setDistancePerPulse(1./256.);
+    //leftEncoder.reset();
+    //rightEncoder.reset();
+    //leftEncoder.setDistancePerPulse(1./256.); //change this value to match whatever distance we want (256 pulse/rotation in SECONDS currently)
+    //rightEncoder.setDistancePerPulse(1./256.);
   }
 
   @Override
   public void teleopPeriodic() {
-    //led.LEDPeriodic();
-    m_robotDrive.tankDrive(stick.getRawAxis(1), stick.getRawAxis(5));
-    winchControl();    
+    led.setPngMap(animationlist.get("default_face").periodic());
+    led.LEDPeriodic();
+    //m_robotDrive.tankDrive(stick.getRawAxis(1), stick.getRawAxis(5));
+    //winchControl();    
     
 
     //Turn on the face
     // LED.LEDInit();
-    m_frontRightMotor.setInverted(true);
-    m_rearRightMotor.setInverted(true);
+    //m_frontRightMotor.setInverted(true);
+    //m_rearRightMotor.setInverted(true);
   }
   public void autonomousPeriodic() {
     //Example code.  We'll probably want while !aprilTagSeen spin left and then follow it
     // Drives forward at half speed until the robot has moved 1 foot, then stops:
-    if(leftEncoder.getDistance() < 1 && rightEncoder.getDistance() < 1) {
+    /*if(leftEncoder.getDistance() < 1 && rightEncoder.getDistance() < 1) {
       m_robotDrive.tankDrive(0.5, 0.5);
     } else {
       m_robotDrive.tankDrive(0, 0);
@@ -121,6 +123,6 @@ public class Robot extends TimedRobot {
     else if(stick.getRawButton(LEFT_BUMPER))
     {
       winchAscender.set(VictorSPXControlMode.PercentOutput, stick.getRawAxis(LEFT_BUMPER));
-    }
+    }*/
   }
 }

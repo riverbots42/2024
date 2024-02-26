@@ -64,10 +64,15 @@ public class AnimationList
         ArrayList<Frame> crinkling_eyes = new ArrayList<Frame>();
         // 01_crinkling_eyes.png Frame # 1
         crinkling_eyes.add(new Frame(crinkling_eyes__1()));
-        animations.put("crinkling_eyes", new Animation(crinkling_eyes));
-        ArrayList<Frame> default_face = new ArrayList<Frame>();
+        //animations.put("crinkling_eyes", new Animation(crinkling_eyes));
+        FrameList default_face = new FrameList();
+        default_face.addFrame(new Frame(default_face__1()),24);
+        
+        default_face.addFrame(new Frame(left__1()),20);
+        
+        
         // 01_default_looking_forward_1.png Frame # 1
-        default_face.add(new Frame(default_face__1()));
+        /*default_face.add(new Frame(default_face__1()));
         // 01_default_looking_forward_2.png Frame # 2
         default_face.add(new Frame(default_face__2()));
         // 01_default_looking_forward_3.png Frame # 3
@@ -120,7 +125,7 @@ public class AnimationList
         ArrayList<Frame> winky = new ArrayList<Frame>();
         // 01_winky.png Frame # 1
         winky.add(new Frame(winky__1()));
-        animations.put("winky", new Animation(winky));
+        animations.put("winky", new Animation(winky));*/
 
     }
 
