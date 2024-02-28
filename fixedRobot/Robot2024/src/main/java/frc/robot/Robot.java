@@ -29,13 +29,13 @@ public class Robot extends TimedRobot {
   final int LEFT_BUMPER = 5;
   final int RIGHT_BUMPER = 6;
   
-  VictorSPX winchAscender = new VictorSPX(5);
+ // VictorSPX winchAscender = new VictorSPX(5);
 
 
-  private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
-  private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
-  private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
-  private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
+ // private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
+ // private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
+ // private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
+ // private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
  // PhotonCamera camera = new PhotonCamera("null"); // necesitamos una cámara
  
   // distance the robot wants to stay from an object
@@ -68,15 +68,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-   led = new LED();
+    led = new LED();
+    led.setAnim("spinning_ufo");
 
-    m_frontLeftMotor.follow(m_rearLeftMotor);
-    m_frontRightMotor.follow(m_rearRightMotor);
+    // m_frontLeftMotor.follow(m_rearLeftMotor);
+    // m_frontRightMotor.follow(m_rearRightMotor);
     
-    SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
-    SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
+    // SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
+    // SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
 
-    m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
+    // m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
     stick = new Joystick(0);
   }
   @Override
@@ -88,8 +89,8 @@ public class Robot extends TimedRobot {
     stick.setYChannel(5);
     
     //why do we have 2 inverts?? 
-    m_frontRightMotor.setInverted(true);
-    m_rearRightMotor.setInverted(true);
+    // m_frontRightMotor.setInverted(true);
+    // m_rearRightMotor.setInverted(true);
 
     leftEncoder.reset();
     rightEncoder.reset();
@@ -97,27 +98,40 @@ public class Robot extends TimedRobot {
     rightEncoder.setDistancePerPulse(1./256.);
 
     //second invert??? 
-    m_frontRightMotor.setInverted(true);
-    m_rearRightMotor.setInverted(true);
+    // m_frontRightMotor.setInverted(true);
+    // m_rearRightMotor.setInverted(true);
 
     robotFieldPosition = pathChoice();
-    
+    led.setAnim("notes_scroll");
+  }
+
+  @Override
+  public void teleopInit() {
+    led.setAnim("default_face");
   }
 
   @Override
   public void teleopPeriodic() {
-    parabolicDrive();
-    winchControl();    
+    //parabolicDrive();
+    //winchControl();    
 
-    //led.LEDPeriodic();
+    led.LEDPeriodic();
     // LED.LEDInit(); //Turn on the face
     
   }
+
+  @Override
+  public void disabledPeriodic() {    
+    led.LEDPeriodic();
+  }
+
   public void stopRobot()
   {
     m_robotDrive.tankDrive(0, 0);
   }
   public void autonomousPeriodic() {
+    led.LEDPeriodic();
+    /*
     switch(robotFieldPosition){
       case 0: //do nothing
         stopRobot();
@@ -132,25 +146,26 @@ public class Robot extends TimedRobot {
         autonomousPathwayFarFromAmpPosition();
         break;
     }
+    */
   }
 
   private void winchControl()
   {
     if(stick.getRawButton(LEFT_BUMPER) && stick.getRawButton(RIGHT_BUMPER)) //If both pressed do nothing
     {
-      winchAscender.set(VictorSPXControlMode.PercentOutput, 0.0);
+      // winchAscender.set(VictorSPXControlMode.PercentOutput, 0.0);
     }
     else if(stick.getRawButton(LEFT_BUMPER)) //Left goes down (edit if changed)
     {
-      winchAscender.set(VictorSPXControlMode.PercentOutput, -1.0);
+      // winchAscender.set(VictorSPXControlMode.PercentOutput, -1.0);
     }
     else if(stick.getRawButton(RIGHT_BUMPER)) //Right goes up (edit if changed)
     {
-      winchAscender.set(VictorSPXControlMode.PercentOutput, 1.0);
+      // winchAscender.set(VictorSPXControlMode.PercentOutput, 1.0);
     }
     else //turn off
     {
-      winchAscender.set(VictorSPXControlMode.PercentOutput, 0.0);
+      // winchAscender.set(VictorSPXControlMode.PercentOutput, 0.0);
     }
   }
   
