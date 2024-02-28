@@ -45,7 +45,12 @@ public class Robot extends TimedRobot {
   final int Y_BUTTON = 4;
   final int LEFT_BUMPER = 5;
   final int RIGHT_BUMPER = 6;
+<<<<<<< HEAD
   final int FIRE_BUTTON = 10; // currently firebutton set to X (3). Set to 10 for Right Stick down
+=======
+  
+ // VictorSPX winchAscender = new VictorSPX(5);
+>>>>>>> 12718aa (BJ LED Code)
 
   final int LEFT_TRIGGER = 2;
   final int RIGHT_TRIGGER = 3;
@@ -66,10 +71,18 @@ public class Robot extends TimedRobot {
   int autoTick=0;
   int autoTickEnd=0;
 
+<<<<<<< HEAD
   private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
   private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
   private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
   private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
+=======
+ // private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
+ // private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
+ // private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
+ // private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
+ // PhotonCamera camera = new PhotonCamera("null"); // necesitamos una cámara
+>>>>>>> 12718aa (BJ LED Code)
  
   private int targetSwitch;
 
@@ -94,6 +107,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+<<<<<<< HEAD
    //led = new LED();
 
    // start a NT4 client
@@ -110,8 +124,18 @@ public class Robot extends TimedRobot {
     SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
     
     SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
+=======
+    led = new LED();
+    led.setAnim("spinning_ufo");
 
-    m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
+    // m_frontLeftMotor.follow(m_rearLeftMotor);
+    // m_frontRightMotor.follow(m_rearRightMotor);
+    
+    // SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
+    // SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
+>>>>>>> 12718aa (BJ LED Code)
+
+    // m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
     stick = new Joystick(0);
   }
   @Override
@@ -122,13 +146,20 @@ public class Robot extends TimedRobot {
     stick.setXChannel(1);
     stick.setYChannel(5);
     
+<<<<<<< HEAD
     endMethod = false;
+=======
+    //why do we have 2 inverts?? 
+    // m_frontRightMotor.setInverted(true);
+    // m_rearRightMotor.setInverted(true);
+>>>>>>> 12718aa (BJ LED Code)
 
     leftEncoder.reset();
     rightEncoder.reset();
     leftEncoder.setDistancePerPulse(1./256.); //change this value to match whatever distance we want (256 pulse/rotation in SECONDS currently)
     rightEncoder.setDistancePerPulse(1./256.);
 
+<<<<<<< HEAD
     rotationSpeed = 0;
     autonomousDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
      
@@ -137,6 +168,20 @@ public class Robot extends TimedRobot {
 
     robotFieldPosition = pathChoice();
     
+=======
+    //second invert??? 
+    // m_frontRightMotor.setInverted(true);
+    // m_rearRightMotor.setInverted(true);
+
+    robotFieldPosition = pathChoice();
+    led.setAnim("notes_scroll");
+  }
+
+  @Override
+  public void teleopInit() {
+    led.setAnim("default_face");
+  }
+>>>>>>> 12718aa (BJ LED Code)
 
     robotFieldPosition = pathChoice();
     
@@ -144,6 +189,7 @@ public class Robot extends TimedRobot {
   //Upload??
   @Override
   public void teleopPeriodic() {
+<<<<<<< HEAD
 
     winchControl();
     FIREINTHEHOLE();
@@ -151,12 +197,25 @@ public class Robot extends TimedRobot {
     intakeSuckerMethod();
     parabolicDrive();
     //led.LEDPeriodic();
+=======
+    //parabolicDrive();
+    //winchControl();    
+
+    led.LEDPeriodic();
+>>>>>>> 12718aa (BJ LED Code)
     // LED.LEDInit(); //Turn on the face
     
   }
+
+  @Override
+  public void disabledPeriodic() {    
+    led.LEDPeriodic();
+  }
+
   public void stopRobot()
   {
     m_robotDrive.tankDrive(0, 0);
+<<<<<<< HEAD
   } 
   public void autonomousPeriodic() 
   {
@@ -164,6 +223,14 @@ public class Robot extends TimedRobot {
    /*  switch(robotFieldPosition){
 
        case 0: //do nothing
+=======
+  }
+  public void autonomousPeriodic() {
+    led.LEDPeriodic();
+    /*
+    switch(robotFieldPosition){
+      case 0: //do nothing
+>>>>>>> 12718aa (BJ LED Code)
         stopRobot();
         break;
       case 1: //score in amp, then drive outside of starting position
@@ -277,25 +344,26 @@ public class Robot extends TimedRobot {
       arm2.set(VictorSPXControlMode.PercentOutput, -LeftTriggerOut);
       arm1.set(VictorSPXControlMode.PercentOutput, LeftTriggerOut);
     }
+    */
   }
 
   private void winchControl()
   {
     if(stick.getRawButton(LEFT_BUMPER) && stick.getRawButton(RIGHT_BUMPER)) //If both pressed do nothing
     {
-      winchAscender.set(VictorSPXControlMode.PercentOutput, 0.0);
+      // winchAscender.set(VictorSPXControlMode.PercentOutput, 0.0);
     }
     else if(stick.getRawButton(LEFT_BUMPER)) //Left goes down (edit if changed)
     {
-      winchAscender.set(VictorSPXControlMode.PercentOutput, -1.0);
+      // winchAscender.set(VictorSPXControlMode.PercentOutput, -1.0);
     }
     else if(stick.getRawButton(RIGHT_BUMPER)) //Right goes up (edit if changed)
     {
-      winchAscender.set(VictorSPXControlMode.PercentOutput, 1.0);
+      // winchAscender.set(VictorSPXControlMode.PercentOutput, 1.0);
     }
     else //turn off
     {
-      winchAscender.set(VictorSPXControlMode.PercentOutput, 0.0);
+      // winchAscender.set(VictorSPXControlMode.PercentOutput, 0.0);
     }
   }
   
