@@ -111,6 +111,7 @@ public class Robot extends TimedRobot {
     super.autonomousInit();
     stick.setXChannel(1);
     stick.setYChannel(5);
+    
 
     leftEncoder.reset();
     rightEncoder.reset();
@@ -191,11 +192,11 @@ public class Robot extends TimedRobot {
         System.out.println("I want to turn left: " + rotationSpeed);
       }
       double range = PhotonUtils.calculateDistanceToTargetMeters(
-      Units.inchesToMeters(45.0),
-      Units.inchesToMeters(54.38),
-      Units.degreesToRadians(0),
-      result.getBestTarget().getYaw());
-      if(range > (2/3))
+      Units.inchesToMeters(45.0), //cam height
+      Units.inchesToMeters(54.38), //target height
+      Units.degreesToRadians(0), //camera pitch needs change
+      result.getBestTarget().getYaw()); // target yaw
+      if(range > Units.inchesToMeters(18)) // 
       {
         System.out.println("I want to go!");
         //autonomousDrive.arcadeDrive(0,rotationSpeed);
