@@ -183,10 +183,10 @@ public class Robot extends TimedRobot {
       targetSwitch = 1;
       System.out.println("ID: " + result.getBestTarget().getFiducialId());
       System.out.println("YAW: " + result.getBestTarget().getYaw());
-      rotationSpeed = -turnController.calculate(result.getBestTarget().getYaw(), 0.0);
+      rotationSpeed = -turnController.calculate(result.getBestTarget().getYaw(), 0.0); //has to be negative or we go backward
       if(rotationSpeed/100 < 0.3 && rotationSpeed/100 > -0.3)
       {
-        autonomousDrive.arcadeDrive(-1, rotationSpeed/100);
+        autonomousDrive.arcadeDrive(-1, rotationSpeed * .50);
       }
       else{
         autonomousDrive.arcadeDrive(0, rotationSpeed);
@@ -202,6 +202,7 @@ public class Robot extends TimedRobot {
       
     }
     else{
+      autonomousDrive.arcadeDrive(0, 0);
       if(targetSwitch == 0)
         System.out.println("N/A");
         targetSwitch = 1;
