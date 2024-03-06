@@ -45,8 +45,9 @@ public class Robot extends TimedRobot {
 
   VictorSPX winchAscender = new VictorSPX(5);
   VictorSPX arm2 = new VictorSPX(6);
-  VictorSPX loader = new VictorSPX(7);
   VictorSPX arm1 = new VictorSPX(8);
+  VictorSPX loader = new VictorSPX(7);
+  
   //VictorSPX shooter = new VictorSPX(9);
 
   int tick=0;
@@ -183,24 +184,19 @@ public class Robot extends TimedRobot {
       System.out.println("ID: " + result.getBestTarget().getFiducialId());
       System.out.println("YAW: " + result.getBestTarget().getYaw());
       rotationSpeed = -turnController.calculate(result.getBestTarget().getYaw(), 0.0);
-      if(rotationSpeed > 0 )
+      if(rotationSpeed/100 < 0.3 && rotationSpeed/100 > -0.3)
       {
-        System.out.println("I want to turn right: " + rotationSpeed);
+        autonomousDrive.arcadeDrive(-1, rotationSpeed/100);
       }
-      else
-      {
-        System.out.println("I want to turn left: " + rotationSpeed);
+      else{
+        autonomousDrive.arcadeDrive(0, rotationSpeed);
       }
       double range = PhotonUtils.calculateDistanceToTargetMeters(
       Units.inchesToMeters(45.0), //cam height
       Units.inchesToMeters(54.38), //target height
       Units.degreesToRadians(0), //camera pitch needs change
       result.getBestTarget().getYaw()); // target yaw
-      if(range > Units.inchesToMeters(18)) // 
-      {
-        System.out.println("I want to go!");
-        //autonomousDrive.arcadeDrive(0,rotationSpeed);
-      }
+      
       
       //autonomousDrive.feed();
       
