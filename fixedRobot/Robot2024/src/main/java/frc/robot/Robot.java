@@ -52,10 +52,10 @@ public class Robot extends TimedRobot {
   int tick=0;
   int startTick=0;
 
-  private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushless);
-  private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushless);
-  private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushless);
-  private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushless);
+  private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
+  private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
+  private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
+  private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
  
   private int targetSwitch;
 
