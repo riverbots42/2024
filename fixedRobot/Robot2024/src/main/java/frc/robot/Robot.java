@@ -300,21 +300,21 @@ public class Robot extends TimedRobot {
     double leftStickSpeed = stick.getRawAxis(1);
     double rightStickSpeed = stick.getRawAxis(5);
     //Parabolic all going forwards
-    m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed);
+    m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed *.65, rightStickSpeed * rightStickSpeed *.65);
     //Parabolic left back
     if(leftStickSpeed < 0)
     {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed);
+      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1 *.65, rightStickSpeed * rightStickSpeed *.65);
     }
     //Parabolic right back
     if(rightStickSpeed < 0)
     {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed * -1);
+      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed *.65, rightStickSpeed * rightStickSpeed * -1 *.65);
     }
     //Parabolic all going backwards
     if(leftStickSpeed < 0 && rightStickSpeed < 0)
     {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed * -1);
+      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1 *.65, rightStickSpeed * rightStickSpeed * -1 *.65);
     }
   }
     public void FIREINTHEHOLE()
