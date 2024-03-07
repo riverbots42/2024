@@ -22,7 +22,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 
-import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode; //if these imports break, delete Phoenix5.json and add the same file back (copy it first)
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 
@@ -35,18 +35,23 @@ public class Robot extends TimedRobot {
   private Joystick stick;
 
   //Controller must be set to "X" mode rather than "D" on the back
+  final int A_BUTTON = 1;
   final int B_BUTTON = 2;
   final int X_BUTTON = 3;
+  final int Y_BUTTON = 4;
   final int LEFT_BUMPER = 5;
   final int RIGHT_BUMPER = 6;
-  final int FIRE_BUTTON = 1; // currently A, switch to 4 for Y
+  final int FIRE_BUTTON = 10; // currently Right Stick down, switch to 4 for Y
+
   final int LEFT_TRIGGER = 2;
   final int RIGHT_TRIGGER = 3;
 
-  VictorSPX winchAscender = new VictorSPX(5);
+  VictorSPX intakeSucker = new VictorSPX(5);
   VictorSPX arm2 = new VictorSPX(6);
   VictorSPX arm1 = new VictorSPX(8);
   VictorSPX loader = new VictorSPX(7);
+  VictorSPX launcherLeft = new VictorSPX(9);
+  VictorSPX launcherRight = new VictorSPX(10);
   
   //VictorSPX shooter = new VictorSPX(9);
 
@@ -150,9 +155,11 @@ public class Robot extends TimedRobot {
     {
       m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed * -1);
     }
-    winchControl();
+    //winchControl();
     FIREINTHEHOLE();
     armControl();
+    intakeSuckerMethod();
+    parabolicDrive();
     //led.LEDPeriodic();
     // LED.LEDInit(); //Turn on the face
     
@@ -163,7 +170,7 @@ public class Robot extends TimedRobot {
   }
   public void autonomousPeriodic() 
   {
-    /*switch(robotFieldPosition){
+    switch(robotFieldPosition){
       case 0: //do nothing
         stopRobot();
         break;
@@ -175,7 +182,13 @@ public class Robot extends TimedRobot {
         break;
       case 3: //leave starting position
         autonomousPathwayFarFromAmpPosition();
-        break;}*/
+        break;}
+
+        //m_robotDrive.feed();
+        //autonomousDrive.feed();
+  }
+  private void autonomousVisionControl()
+  {
     var result = camera.getLatestResult();
     boolean hasTargets = result.hasTargets();
     if(hasTargets)
@@ -189,7 +202,7 @@ public class Robot extends TimedRobot {
         autonomousDrive.arcadeDrive(-1, rotationSpeed * .50);
       }
       else{
-        autonomousDrive.arcadeDrive(0, rotationSpeed);
+        autonomousDrive.arcadeDrive(0, -.25); //-.25 should slowly turn to the left in a circle.  Using rotation speed will have this value @ 0 if we have no target
       }
       double range = PhotonUtils.calculateDistanceToTargetMeters(
       Units.inchesToMeters(45.0), //cam height
@@ -207,9 +220,28 @@ public class Robot extends TimedRobot {
         System.out.println("N/A");
         targetSwitch = 1;
       }        //m_robotDrive.feed();
-        //autonomousDrive.feed();
-    
   }
+
+  private void intakeSuckerMethod()
+  {
+    if(stick.getRawButton(Y_BUTTON) && stick.getRawButton(A_BUTTON)) //If both pressed do nothing
+    {
+      intakeSucker.set(VictorSPXControlMode.PercentOutput, 0.0);
+    }
+    else if(stick.getRawButton(A_BUTTON)) //Push out (edit if changed)
+    {
+      intakeSucker.set(VictorSPXControlMode.PercentOutput, -1.0);
+    }
+    else if(stick.getRawButton(Y_BUTTON)) //Suck in (edit if changed)
+    {
+      intakeSucker.set(VictorSPXControlMode.PercentOutput, 1.0);
+    }
+    else //turn off
+    {
+      intakeSucker.set(VictorSPXControlMode.PercentOutput, 0.0);
+    }
+  }
+
   private void armControl()
   {
     double RightTriggerOut = stick.getRawAxis(RIGHT_TRIGGER) * .50;
@@ -218,22 +250,24 @@ public class Robot extends TimedRobot {
     if(RightTriggerOut > 0 && LeftTriggerOut > 0)
     {
       arm2.set(VictorSPXControlMode.PercentOutput, 0);
-    arm1.set(VictorSPXControlMode.PercentOutput, 0);
+      arm1.set(VictorSPXControlMode.PercentOutput, 0);
     }
     else if(RightTriggerOut >0)
     {
       arm2.set(VictorSPXControlMode.PercentOutput, RightTriggerOut);
-    arm1.set(VictorSPXControlMode.PercentOutput, -RightTriggerOut);
+      arm1.set(VictorSPXControlMode.PercentOutput, -RightTriggerOut);
     }
     else if(LeftTriggerOut >0)
     {
       arm2.set(VictorSPXControlMode.PercentOutput, -LeftTriggerOut);
-    arm1.set(VictorSPXControlMode.PercentOutput, LeftTriggerOut);
+      arm1.set(VictorSPXControlMode.PercentOutput, LeftTriggerOut);
     }
     
     
   }
-  private void winchControl()
+
+  //Do we use this anymore??
+  /*private void winchControl()
   {
     if(stick.getRawButton(LEFT_BUMPER) && stick.getRawButton(RIGHT_BUMPER)) //If both pressed do nothing
     {
@@ -251,7 +285,7 @@ public class Robot extends TimedRobot {
     {
       winchAscender.set(VictorSPXControlMode.PercentOutput, 0.0);
     }
-  }
+  }*/
   
   private void parabolicDrive()
   {
@@ -327,12 +361,12 @@ public class Robot extends TimedRobot {
   {
     //Example code.  We'll probably want while !aprilTagSeen spin left and then follow it
     // Drives forward at half speed until the robot has moved 1 foot, then stops:
-    /* if(leftEncoder.getDistance() < DISTANCE_TO_AMP && rightEncoder.getDistance() < DISTANCE_TO_AMP) {
+    if(leftEncoder.getDistance() < DISTANCE_TO_AMP && rightEncoder.getDistance() < DISTANCE_TO_AMP) {
       m_robotDrive.tankDrive(0.5, 0.5);
-      System.out.println("HI");
-    } else {
-      stopRobot();
-    }*/
+    }
+    //Trust??
+    stopRobot();
+    autonomousVisionControl();
 
     // testing April tag stuff
     
@@ -346,12 +380,14 @@ public class Robot extends TimedRobot {
   private void autonomousPathwayMiddlePosition()
   {
     // look for april tags 5 (red) /6 (blue)
-    
+    autonomousVisionControl();
+    stopRobot();
   }
   
   private void autonomousPathwayFarFromAmpPosition()
   {
     // Look for april tags 4 (red) & 8 (blue)
+    autonomousVisionControl();
     stopRobot();
   }
 }
