@@ -43,15 +43,15 @@ public class Robot extends TimedRobot {
   final int Y_BUTTON = 4;
   final int LEFT_BUMPER = 5;
   final int RIGHT_BUMPER = 6;
-  final int FIRE_BUTTON = 10; // currently Right Stick down, switch to 4 for Y
+  final int FIRE_BUTTON = 10; // currently firebutton set to X (3). Set to 10 for Right Stick down
 
   final int LEFT_TRIGGER = 2;
   final int RIGHT_TRIGGER = 3;
 
-  VictorSPX intakeSucker = new VictorSPX(5);
+  VictorSPX winchAscender = new VictorSPX(5);
   VictorSPX arm2 = new VictorSPX(6);
   VictorSPX arm1 = new VictorSPX(8);
-  VictorSPX winchAscender = new VictorSPX(7);
+  VictorSPX intakeSucker = new VictorSPX(7);
   TalonSRX launcherLeft = new TalonSRX(9);
   TalonSRX launcherRight = new TalonSRX(10);
   
@@ -83,7 +83,8 @@ public class Robot extends TimedRobot {
 
   private final DigitalInput pathSetterOne = new DigitalInput(1);
   private final DigitalInput pathSetterTwo = new DigitalInput(2);
-  final double DISTANCE_TO_AMP = 43.8; //inches
+  final double DISTANCE_TO_AMP = 76.1; //inches
+  final double FORWARD_POSITION = 200; //inches
   private int robotFieldPosition = 0;
 
  //THIS line breaks our code:
@@ -240,7 +241,7 @@ public class Robot extends TimedRobot {
     }
     else if(stick.getRawButton(A_BUTTON)) //Push out (edit if changed)
     {
-      intakeSucker.set(VictorSPXControlMode.PercentOutput, -1.0);
+      intakeSucker.set(VictorSPXControlMode.PercentOutput, -0.4);
     }
     else if(stick.getRawButton(Y_BUTTON)) //Suck in (edit if changed)
     {
@@ -274,7 +275,6 @@ public class Robot extends TimedRobot {
     }
   }
 
-  //Do we use this anymore??
   private void winchControl()
   {
     if(stick.getRawButton(LEFT_BUMPER) && stick.getRawButton(RIGHT_BUMPER)) //If both pressed do nothing
@@ -320,19 +320,20 @@ public class Robot extends TimedRobot {
     public void FIREINTHEHOLE()
     {
        tick++;
-      if(stick.getRawButton(FIRE_BUTTON))
+      if(stick.getRawButton(B_BUTTON))
       {
         startTick = tick;
         // set victor shooter motors to high
-        launcherLeft.set(TalonSRXControlMode.PercentOutput,1);
+        launcherLeft.set(TalonSRXControlMode.PercentOutput,-1);
         launcherRight.set(TalonSRXControlMode.PercentOutput,1);
-
+        intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
         // this won't probably work but the idea is that after tick is 25 more than when first clicked it will unload the ring into firing mechanism
         if(startTick  == tick - 25)
         {
           startTick = 0;
           //shoot unload the payload
-          intakeSucker.set(VictorSPXControlMode.PercentOutput, 1);
+          //System.out.println("Shooting");
+          
 
         }
       }
@@ -387,14 +388,16 @@ public class Robot extends TimedRobot {
   private void autonomousPathwayMiddlePosition()
   {
     // look for april tags 5 (red) /6 (blue)
-    autonomousVisionControl();
+    autonomousVisionControl(); //may remove for competition if we can't test
     stopRobot();
   }
   
   private void autonomousPathwayFarFromAmpPosition()
   {
     // Look for april tags 4 (red) & 8 (blue)
-    autonomousVisionControl();
+    if(leftEncoder.getDistance() < FORWARD_POSITION && rightEncoder.getDistance() < FORWARD_POSITION) {
+      m_robotDrive.tankDrive(0.5, 0.5);
+    }
     stopRobot();
   }
 }
