@@ -22,7 +22,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode; //if these imports break, delete Phoenix5.json and add the same file back (copy it first)
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 
@@ -49,9 +51,9 @@ public class Robot extends TimedRobot {
   VictorSPX intakeSucker = new VictorSPX(5);
   VictorSPX arm2 = new VictorSPX(6);
   VictorSPX arm1 = new VictorSPX(8);
-  VictorSPX loader = new VictorSPX(7);
-  VictorSPX launcherLeft = new VictorSPX(9);
-  VictorSPX launcherRight = new VictorSPX(10);
+  VictorSPX winchAscender = new VictorSPX(7);
+  TalonSRX launcherLeft = new TalonSRX(9);
+  TalonSRX launcherRight = new TalonSRX(10);
   
   //VictorSPX shooter = new VictorSPX(9);
 
@@ -155,7 +157,7 @@ public class Robot extends TimedRobot {
     {
       m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed * -1);
     }
-    //winchControl();
+    winchControl();
     FIREINTHEHOLE();
     armControl();
     intakeSuckerMethod();
@@ -267,7 +269,7 @@ public class Robot extends TimedRobot {
   }
 
   //Do we use this anymore??
-  /*private void winchControl()
+  private void winchControl()
   {
     if(stick.getRawButton(LEFT_BUMPER) && stick.getRawButton(RIGHT_BUMPER)) //If both pressed do nothing
     {
@@ -285,7 +287,7 @@ public class Robot extends TimedRobot {
     {
       winchAscender.set(VictorSPXControlMode.PercentOutput, 0.0);
     }
-  }*/
+  }
   
   private void parabolicDrive()
   {
@@ -330,12 +332,14 @@ public class Robot extends TimedRobot {
       }*/
       if(stick.getRawButton(FIRE_BUTTON))
       {
-        loader.set(VictorSPXControlMode.PercentOutput, 1);
+        launcherLeft.set(TalonSRXControlMode.PercentOutput, 1);
+        launcherRight.set(TalonSRXControlMode.PercentOutput, 1);
 
 
       }
       else{
-        loader.set(VictorSPXControlMode.PercentOutput, 0);
+        launcherLeft.set(TalonSRXControlMode.PercentOutput, 0);
+        launcherRight.set(TalonSRXControlMode.PercentOutput, 0);
       }
     }
 
