@@ -201,10 +201,18 @@ public class Robot extends TimedRobot {
       rotationSpeed = -turnController.calculate(result.getBestTarget().getYaw(), 0.0); //has to be negative or we go backward
       if(rotationSpeed/100 < 0.3 && rotationSpeed/100 > -0.3)
       {
-        autonomousDrive.arcadeDrive(-1, rotationSpeed * .50);
+        autonomousDrive.arcadeDrive(-1 , rotationSpeed);
       }
       else{
-        autonomousDrive.arcadeDrive(0, -.25); //-.25 should slowly turn to the left in a circle.  Using rotation speed will have this value @ 0 if we have no target
+        if(rotationSpeed > 0)
+        {
+          m_robotDrive.tankDrive(-0.25,0.25);
+        }
+        else
+        {
+          m_robotDrive.tankDrive(0.25, -0.25);
+        }
+        
       }
       double range = PhotonUtils.calculateDistanceToTargetMeters(
       Units.inchesToMeters(45.0), //cam height
@@ -217,7 +225,7 @@ public class Robot extends TimedRobot {
       
     }
     else{
-      autonomousDrive.arcadeDrive(0, 0);
+      m_robotDrive.tankDrive(-.25,.25);
       if(targetSwitch == 0)
         System.out.println("N/A");
         targetSwitch = 1;
@@ -264,8 +272,6 @@ public class Robot extends TimedRobot {
       arm2.set(VictorSPXControlMode.PercentOutput, -LeftTriggerOut);
       arm1.set(VictorSPXControlMode.PercentOutput, LeftTriggerOut);
     }
-    
-    
   }
 
   //Do we use this anymore??
@@ -313,33 +319,30 @@ public class Robot extends TimedRobot {
   }
     public void FIREINTHEHOLE()
     {
-      /* tick++;
+       tick++;
       if(stick.getRawButton(FIRE_BUTTON))
       {
         startTick = tick;
         // set victor shooter motors to high
-        // shooter.set(VictorSPXControlMode.PercentOutput,1);
+        launcherLeft.set(TalonSRXControlMode.PercentOutput,1);
+        launcherRight.set(TalonSRXControlMode.PercentOutput,1);
+
         // this won't probably work but the idea is that after tick is 25 more than when first clicked it will unload the ring into firing mechanism
-        if(startTick + 25 == tick)
+        if(startTick  == tick - 25)
         {
           startTick = 0;
           //shoot unload the payload
+          intakeSucker.set(VictorSPXControlMode.PercentOutput, 1);
+
         }
-      }
-      if(startTick == 0 && tick > 1000)
-      {
-        tick = 0;
-      }*/
-      if(stick.getRawButton(FIRE_BUTTON))
-      {
-        launcherLeft.set(TalonSRXControlMode.PercentOutput, 1);
-        launcherRight.set(TalonSRXControlMode.PercentOutput, 1);
-
-
       }
       else{
         launcherLeft.set(TalonSRXControlMode.PercentOutput, 0);
         launcherRight.set(TalonSRXControlMode.PercentOutput, 0);
+      }
+      if(startTick == 0 && tick > 1000)
+      {
+        tick = 0;
       }
     }
 
