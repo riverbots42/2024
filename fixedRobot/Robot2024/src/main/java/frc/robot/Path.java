@@ -4,13 +4,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class Path {
+    ExampleSubSystem exampleSubsystem;
     public Path() {
         // Subsystem initialization
         DifferentialDrive tankDrive = new DifferentialDrive();
-        exampleSubsystem = new ExampleSubsystem();
+       // exampleSubsystem = new ExampleSubsystem();
 
         // Register Named Commands
-        NamedCommands.registerCommand("GrabRingAndShoot", FIREINTHEHOLE());
+        NamedCommands.registerCommand("GrabRingAndShoot", Robot.FIREINTHEHOLE());
       //  NamedCommands.registerCommand("exampleCommand", exampleSubsystem.exampleCommand());
       //  NamedCommands.registerCommand("someOtherCommand", new SomeOtherCommand());
 
