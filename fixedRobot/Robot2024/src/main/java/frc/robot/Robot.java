@@ -143,7 +143,7 @@ public class Robot extends TimedRobot {
     //Parabolic all going forwards
     toggleTurbo = false;
     
-    //Parabolic left back
+    //Parabolic left back 
     if(leftStickSpeed < 0)
     {
       m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed);
