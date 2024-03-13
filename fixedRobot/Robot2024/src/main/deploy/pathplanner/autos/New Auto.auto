@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6766573533147072,
+      "y": 6.699372255887369
+    },
+    "rotation": 56.82148834060719
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Aidean Winning"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GrabRingAndShoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
