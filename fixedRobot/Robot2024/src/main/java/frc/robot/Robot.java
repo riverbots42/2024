@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.Victor;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import com.revrobotics.CANSparkMax;
@@ -33,13 +34,13 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
  * Tank drive and main robot code
  */
 public class Robot extends TimedRobot {
-  private DifferentialDrive m_robotDrive;
+  public static DifferentialDrive m_robotDrive;
   private DifferentialDrive autonomousDrive;
-  private Joystick stick;
+  private static Joystick stick;
 
   //Controller must be set to "X" mode rather than "D" on the back
   final int A_BUTTON = 1;
-  final int B_BUTTON = 2;
+  final static int B_BUTTON = 2;
   final int X_BUTTON = 3;
   final int Y_BUTTON = 4;
   final int LEFT_BUMPER = 5;
@@ -56,12 +57,12 @@ public class Robot extends TimedRobot {
   VictorSPX winchAscender = new VictorSPX(5);
   VictorSPX arm2 = new VictorSPX(6);
   VictorSPX arm1 = new VictorSPX(8);
-  VictorSPX intakeSucker = new VictorSPX(7);
-  TalonSRX launcherLeft = new TalonSRX(9);
-  TalonSRX launcherRight = new TalonSRX(10);
+  static VictorSPX intakeSucker = new VictorSPX(7);
+  static TalonSRX launcherLeft = new TalonSRX(9);
+  static TalonSRX launcherRight = new TalonSRX(10);
 
-  int tick=0;
-  int startTick=0;
+  static int tick=0;
+  static int startTick=0;
   int autoTick=0;
   int autoTickEnd=0;
 
@@ -366,7 +367,7 @@ public class Robot extends TimedRobot {
         m_robotDrive.feed();
     }
  // }
-  public void FIREINTHEHOLE()
+  public static void FIREINTHEHOLE()
   {
     tick++;
     if(stick.getRawButton(B_BUTTON))
@@ -381,8 +382,7 @@ public class Robot extends TimedRobot {
         startTick = 0;
         //shoot unload the payload
         System.out.println("Shooting");
-        intakeSucker.set(VictorSPXControlMode.PercentOutput, -0.5);
-
+        intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
       }
     }
     else{
