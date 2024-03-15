@@ -57,9 +57,9 @@ public class Robot extends TimedRobot {
   VictorSPX winchAscender = new VictorSPX(5);
   VictorSPX arm2 = new VictorSPX(6);
   VictorSPX arm1 = new VictorSPX(8);
-  static VictorSPX intakeSucker = new VictorSPX(7);
-  static TalonSRX launcherLeft = new TalonSRX(9);
-  static TalonSRX launcherRight = new TalonSRX(10);
+  public static VictorSPX intakeSucker = new VictorSPX(7);
+  public static TalonSRX launcherLeft = new TalonSRX(9);
+  public static TalonSRX launcherRight = new TalonSRX(10);
 
   static int tick=0;
   static int startTick=0;
@@ -177,7 +177,7 @@ public class Robot extends TimedRobot {
   public void stopRobot()
   {
     m_robotDrive.tankDrive(0, 0);
-  }
+  } 
   public void autonomousPeriodic() 
   {
     
@@ -261,10 +261,12 @@ public class Robot extends TimedRobot {
     {
       intakeSucker.set(VictorSPXControlMode.PercentOutput, 0.0);
     }
+    /*
     else if(stick.getRawButton(Y_BUTTON)) //Push out (edit if changed)
     {
       intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
-    }
+    }*/
+    
     else if(sucking) //Suck in (edit if changed)
     {
       intakeSucker.set(VictorSPXControlMode.PercentOutput, 1.0);
