@@ -136,7 +136,7 @@ public class Robot extends TimedRobot {
     robotFieldPosition = pathChoice();
     
   }
-  //Upload?
+  //Upload??
   @Override
   public void teleopPeriodic() {
     double leftStickSpeed = stick.getRawAxis(1);
