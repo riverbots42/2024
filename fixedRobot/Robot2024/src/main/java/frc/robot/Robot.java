@@ -144,32 +144,7 @@ public class Robot extends TimedRobot {
   //Upload??
   @Override
   public void teleopPeriodic() {
-    double leftStickSpeed = stick.getRawAxis(1);
-    double rightStickSpeed = stick.getRawAxis(5);
-    //Parabolic all going forwards
-    toggleTurbo = false;
-    
-    //Parabolic left back 
-    if(leftStickSpeed < 0)
-    {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed);
-    }
-    //Parabolic right back
-    else if(rightStickSpeed < 0)
-    {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed * -1);
-    }
-    //Parabolic all going backwards
-    else if(leftStickSpeed < 0 && rightStickSpeed < 0)
-    {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed * -1);
-    }
-    else
-    {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed);
-    }
-      
-    
+
     winchControl();
     FIREINTHEHOLE();
     armControl();
@@ -329,51 +304,28 @@ public class Robot extends TimedRobot {
     double leftStickSpeed = stick.getRawAxis(1);
     double rightStickSpeed = stick.getRawAxis(5);
     //Parabolic all going forwards
-    /*if(stick.getRawButtonPressed(X_BUTTON))
+    toggleTurbo = false;
+    
+    //Parabolic left back 
+    if(leftStickSpeed < 0)
     {
-      toggleTurbo = !toggleTurbo;
+      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed);
     }
-    if(toggleTurbo)
+    //Parabolic right back
+    else if(rightStickSpeed < 0)
     {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed );
-      //Parabolic left back
-      if(leftStickSpeed < 0)
-      {
-        m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed);
-      }
-      //Parabolic right back
-      if(rightStickSpeed < 0)
-      {
-        m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed * -1);
-      }
-      //Parabolic all going backwards
-      if(leftStickSpeed < 0 && rightStickSpeed < 0)
-      {
-        m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed * -1);
-      }
+      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed * -1);
+    }
+    //Parabolic all going backwards
+    else if(leftStickSpeed < 0 && rightStickSpeed < 0)
+    {
+      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed * -1);
     }
     else
-    {*/
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed , rightStickSpeed * rightStickSpeed );
-      //Parabolic left back
-      if(leftStickSpeed < 0)
-      {
-        m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed);
-      }
-      //Parabolic right back
-      if(rightStickSpeed < 0)
-      {
-        m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed * -1);
-      }
-      //Parabolic all going backwards
-      if(leftStickSpeed < 0 && rightStickSpeed < 0)
-      {
-        m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed * -1);
-      }
-      
-        m_robotDrive.feed();
+    {
+      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed);
     }
- // }
+  }
   public static void FIREINTHEHOLE()
   {
     if(stick.getRawButton(B_BUTTON))
