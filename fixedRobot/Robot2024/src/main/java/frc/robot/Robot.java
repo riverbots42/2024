@@ -254,12 +254,12 @@ public class Robot extends TimedRobot {
     {
       sucking = !sucking;
     }
-    tick++;
+    
     if(stick.getRawButton(B_BUTTON))
     {
       if(intakeSucker.getMotorOutputPercent() > 0)
       {
-        sucking = false;//404 intellegence not found (in your music taste / opinion)
+        sucking = false;
         intakeSucker.set(VictorSPXControlMode.PercentOutput, 0);
       }
       startTick = tick;
@@ -268,16 +268,9 @@ public class Robot extends TimedRobot {
       launcherRight.set(TalonSRXControlMode.PercentOutput,1);
       // this won't probably work but the idea is that after tick is 25 more than when first clicked it will unload the ring into firing mechanism
       intakeSucker.set(VictorSPXControlMode.PercentOutput, -0.5);
-
-      if(startTick == tick - 25)
-      {
-        startTick = 0;
-        //shoot unload the payload
-        System.out.println("Shooting");
-
-      }
     }
-    else{
+    else
+    {
       launcherLeft.set(TalonSRXControlMode.PercentOutput, 0);
       launcherRight.set(TalonSRXControlMode.PercentOutput, 0);
       if(stick.getRawButton(Y_BUTTON)) //Push out (edit if changed)
@@ -293,10 +286,7 @@ public class Robot extends TimedRobot {
         intakeSucker.set(VictorSPXControlMode.PercentOutput, 0.0);
       }
     }
-    if(startTick == 0 && tick > 1000)
-    {
-      tick = 0;
-    }
+
     
     
   }
