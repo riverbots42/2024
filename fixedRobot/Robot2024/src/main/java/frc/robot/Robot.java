@@ -371,29 +371,17 @@ public class Robot extends TimedRobot {
  // }
   public static void FIREINTHEHOLE()
   {
-    tick++;
     if(stick.getRawButton(B_BUTTON))
     {
-      startTick = tick;
       // set victor shooter motors to high
       launcherLeft.set(TalonSRXControlMode.PercentOutput,-1);
       launcherRight.set(TalonSRXControlMode.PercentOutput,1);
-      // this won't probably work but the idea is that after tick is 25 more than when first clicked it will unload the ring into firing mechanism
-      if(startTick == tick - 25)
-      {
-        startTick = 0;
-        //shoot unload the payload
-        System.out.println("Shooting");
-        intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
-      }
+      intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
     }
     else{
       launcherLeft.set(TalonSRXControlMode.PercentOutput, 0);
       launcherRight.set(TalonSRXControlMode.PercentOutput, 0);
-    }
-    if(startTick == 0 && tick > 1000)
-    {
-      tick = 0;
+      intakeSucker.set(VictorSPXControlMode.PercentOutput, 0);
     }
   }
 
