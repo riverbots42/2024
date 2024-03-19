@@ -165,9 +165,8 @@ public class Robot extends TimedRobot {
       
     
     winchControl();
-    FIREINTHEHOLE();
     armControl();
-    intakeSuckerMethod();
+    shootAndSuck();
     parabolicDrive();
     //led.LEDPeriodic();
     // LED.LEDInit(); //Turn on the face
@@ -249,29 +248,57 @@ public class Robot extends TimedRobot {
     
   }
 
-  private void intakeSuckerMethod()
+  private void shootAndSuck()
   {
     if(stick.getRawButtonPressed(A_BUTTON))
     {
       sucking = !sucking;
     }
+    tick++;
+    if(stick.getRawButton(B_BUTTON))
+    {
+      if(intakeSucker.getMotorOutputPercent() > 0)
+      {
+        sucking = false;//404 intellegence not found (in your music taste / opinion)
+        intakeSucker.set(VictorSPXControlMode.PercentOutput, 0);
+      }
+      startTick = tick;
+      // set victor shooter motors to high
+      launcherLeft.set(TalonSRXControlMode.PercentOutput,-1);
+      launcherRight.set(TalonSRXControlMode.PercentOutput,1);
+      // this won't probably work but the idea is that after tick is 25 more than when first clicked it will unload the ring into firing mechanism
+      intakeSucker.set(VictorSPXControlMode.PercentOutput, -0.5);
 
-    if(stick.getRawButton(Y_BUTTON) && stick.getRawButton(A_BUTTON)) //If both pressed do nothing
-    {
-      intakeSucker.set(VictorSPXControlMode.PercentOutput, 0.0);
+      if(startTick == tick - 25)
+      {
+        startTick = 0;
+        //shoot unload the payload
+        System.out.println("Shooting");
+
+      }
     }
-    else if(stick.getRawButton(Y_BUTTON)) //Push out (edit if changed)
-    {
-      intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
+    else{
+      launcherLeft.set(TalonSRXControlMode.PercentOutput, 0);
+      launcherRight.set(TalonSRXControlMode.PercentOutput, 0);
+      if(stick.getRawButton(Y_BUTTON)) //Push out (edit if changed)
+      {
+        intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
+      }
+      else if(sucking) //Suck in (edit if changed)
+      {
+        intakeSucker.set(VictorSPXControlMode.PercentOutput, 1.0);
+      }
+      else //turn off
+      {
+        intakeSucker.set(VictorSPXControlMode.PercentOutput, 0.0);
+      }
     }
-    else if(sucking) //Suck in (edit if changed)
+    if(startTick == 0 && tick > 1000)
     {
-      intakeSucker.set(VictorSPXControlMode.PercentOutput, 1.0);
+      tick = 0;
     }
-    else //turn off
-    {
-      intakeSucker.set(VictorSPXControlMode.PercentOutput, 0.0);
-    }
+    
+    
   }
 
   private void armControl()
@@ -366,34 +393,6 @@ public class Robot extends TimedRobot {
         m_robotDrive.feed();
     }
  // }
-  public void FIREINTHEHOLE()
-  {
-    tick++;
-    if(stick.getRawButton(B_BUTTON))
-    {
-      startTick = tick;
-      // set victor shooter motors to high
-      launcherLeft.set(TalonSRXControlMode.PercentOutput,-1);
-      launcherRight.set(TalonSRXControlMode.PercentOutput,1);
-      // this won't probably work but the idea is that after tick is 25 more than when first clicked it will unload the ring into firing mechanism
-      if(startTick == tick - 25)
-      {
-        startTick = 0;
-        //shoot unload the payload
-        System.out.println("Shooting");
-        intakeSucker.set(VictorSPXControlMode.PercentOutput, -0.5);
-
-      }
-    }
-    else{
-      launcherLeft.set(TalonSRXControlMode.PercentOutput, 0);
-      launcherRight.set(TalonSRXControlMode.PercentOutput, 0);
-    }
-    if(startTick == 0 && tick > 1000)
-    {
-      tick = 0;
-    }
-  }
 
   private int pathChoice()
   {
