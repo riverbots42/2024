@@ -75,6 +75,8 @@ public class Robot extends TimedRobot {
 
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
   PhotonCamera camera = new PhotonCamera(inst, "HD_USB_Camera 2"); 
+  public LED led;
+
 
   double rotationSpeed;
   final double ANGULAR_P = 1;
@@ -132,6 +134,9 @@ public class Robot extends TimedRobot {
      
     m_frontRightMotor.setInverted(true);
     m_rearRightMotor.setInverted(true);
+
+    robotFieldPosition = pathChoice();
+    
 
     robotFieldPosition = pathChoice();
     

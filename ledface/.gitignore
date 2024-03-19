@@ -1,0 +1,5 @@
+*.class
+test/AnimationList.java
+test/Animation.java
+test/Frame.java
+test/frc
