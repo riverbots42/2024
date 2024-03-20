@@ -5,9 +5,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
-//import edu.wpi.first.math.filter.MedianFilter;
-//import edu.wpi.first.wpilibj.Ultrasonic;
-
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -45,6 +42,7 @@ public class Robot extends TimedRobot {
   final int Y_BUTTON = 4;
   final int LEFT_BUMPER = 5;
   final int RIGHT_BUMPER = 6;
+
   final int FIRE_BUTTON = 10; // currently firebutton set to X (3). Set to 10 for Right Stick down
 
   final int LEFT_TRIGGER = 2;
@@ -77,7 +75,6 @@ public class Robot extends TimedRobot {
   PhotonCamera camera = new PhotonCamera(inst, "HD_USB_Camera 2"); 
   public LED led;
 
-
   double rotationSpeed;
   final double ANGULAR_P = 1;
   final double ANGULAR_D = 1;
@@ -92,10 +89,10 @@ public class Robot extends TimedRobot {
   final double FORWARD_POSITION = 240; //inches
   private int robotFieldPosition = 0;
 
+  public int fireTick = 0;
+
   @Override
   public void robotInit() {
-   //led = new LED();
-
    // start a NT4 client
    inst.startClient4("example client");
 
@@ -108,13 +105,16 @@ public class Robot extends TimedRobot {
     m_frontRightMotor.follow(m_rearRightMotor);
     
     SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
-    
     SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
+
+    led = new LED();
+    led.setAnim("default_face");
 
     m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
     stick = new Joystick(0);
   }
   @Override
+  
   public void autonomousInit() {
     //What's this?
     // TODO Auto-generated method stub 
@@ -131,29 +131,28 @@ public class Robot extends TimedRobot {
 
     rotationSpeed = 0;
     autonomousDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
-     
+    
     m_frontRightMotor.setInverted(true);
     m_rearRightMotor.setInverted(true);
 
     robotFieldPosition = pathChoice();
     
-
-    robotFieldPosition = pathChoice();
-    
   }
-  //Upload??
   @Override
   public void teleopPeriodic() {
-
     winchControl();
-    FIREINTHEHOLE();
     armControl();
     intakeSuckerMethod();
+    FIREINTHEHOLE(); //MUST be set after intakeSucker or the motor values will be overridden
     parabolicDrive();
-    //led.LEDPeriodic();
-    // LED.LEDInit(); //Turn on the face
-    
+    led.LEDPeriodic();
   }
+
+  @Override
+  public void disabledPeriodic() {    
+    led.LEDPeriodic();
+  }
+
   public void stopRobot()
   {
     m_robotDrive.tankDrive(0, 0);
@@ -161,7 +160,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() 
   {
     
-   /*  switch(robotFieldPosition){
+     switch(robotFieldPosition){
 
        case 0: //do nothing
         stopRobot();
@@ -171,11 +170,11 @@ public class Robot extends TimedRobot {
         break;
       case 2: //do something
         autonomousPathwayMiddlePosition();
-        break; */
-    //  case 3: //leave starting position
+        break; 
+      case 3: //leave starting position
         autonomousPathwayFarFromAmpPosition();
 
-       // break;}
+        break;}
     autonomousDrive.feed();
     m_robotDrive.feed();
 
@@ -188,8 +187,6 @@ public class Robot extends TimedRobot {
     if(hasTargets)
     {
       targetSwitch = 1;
-      //System.out.println("ID: " + result.getBestTarget().getFiducialId());
-      //System.out.println("YAW: " + result.getBestTarget().getYaw());
       rotationSpeed = -turnController.calculate(result.getBestTarget().getYaw(), 0.0); //has to be negative or we go backward
       if(rotationSpeed/100 < 0.3 && rotationSpeed/100 > -0.3)
       {
@@ -215,9 +212,6 @@ public class Robot extends TimedRobot {
       {
         endMethod = true;
       }
-      
-      //autonomousDrive.feed();
-      
     }
 
     else{
@@ -225,9 +219,7 @@ public class Robot extends TimedRobot {
       if(targetSwitch == 0)
         System.out.println("N/A");
         targetSwitch = 1;
-      }     
-    
-    
+      }
   }
 
   private void intakeSuckerMethod()
@@ -241,11 +233,10 @@ public class Robot extends TimedRobot {
     {
       intakeSucker.set(VictorSPXControlMode.PercentOutput, 0.0);
     }
-    /*
     else if(stick.getRawButton(Y_BUTTON)) //Push out (edit if changed)
     {
       intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
-    }*/
+    }
     
     else if(sucking) //Suck in (edit if changed)
     {
@@ -277,6 +268,7 @@ public class Robot extends TimedRobot {
       arm2.set(VictorSPXControlMode.PercentOutput, -LeftTriggerOut);
       arm1.set(VictorSPXControlMode.PercentOutput, LeftTriggerOut);
     }
+    
   }
 
   private void winchControl()
@@ -299,43 +291,38 @@ public class Robot extends TimedRobot {
     }
   }
   
+  public double negSquare(double in) {
+    double out = in * in;
+    if(in < 0 && out > 0) {
+      out = -out;
+    }
+    return out;
+  }
+
   private void parabolicDrive()
   {
-    double leftStickSpeed = stick.getRawAxis(1);
-    double rightStickSpeed = stick.getRawAxis(5);
-    //Parabolic all going forwards
-    toggleTurbo = false;
+    double leftStickSpeed = negSquare(stick.getRawAxis(1));
+    double rightStickSpeed = negSquare(stick.getRawAxis(5));
     
-    //Parabolic left back 
-    if(leftStickSpeed < 0)
-    {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed);
-    }
-    //Parabolic right back
-    else if(rightStickSpeed < 0)
-    {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed * -1);
-    }
-    //Parabolic all going backwards
-    else if(leftStickSpeed < 0 && rightStickSpeed < 0)
-    {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed * -1);
-    }
-    else
-    {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed);
-    }
+    m_robotDrive.tankDrive(leftStickSpeed, rightStickSpeed);
   }
-  public static void FIREINTHEHOLE()
+
+  public void FIREINTHEHOLE()
   {
+    System.out.println(fireTick);
     if(stick.getRawButton(B_BUTTON))
     {
       // set victor shooter motors to high
       launcherLeft.set(TalonSRXControlMode.PercentOutput,-1);
       launcherRight.set(TalonSRXControlMode.PercentOutput,1);
-      intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
+      fireTick++;
+      if(fireTick == 50)
+        System.out.println("Firing!");
+      if(fireTick > 50)
+        intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
     }
     else{
+      fireTick = 0;
       launcherLeft.set(TalonSRXControlMode.PercentOutput, 0);
       launcherRight.set(TalonSRXControlMode.PercentOutput, 0);
       intakeSucker.set(VictorSPXControlMode.PercentOutput, 0);

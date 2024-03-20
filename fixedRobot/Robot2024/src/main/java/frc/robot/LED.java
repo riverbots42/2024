@@ -1,29 +1,30 @@
 package frc.robot;
 
+import java.util.*;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
 public class LED {
-    public AddressableLED m_led = new AddressableLED(8);
+    public AddressableLED m_led;
     public  AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(512);
-    int idx;
+    int tick = 0;
+    public AnimationList animations;
+    private Animation cur_anim = null;
 
     //For translating our png output to our physically flipped LED arrays
     public int cur_x;
     public int cur_y;
     public int cur_index;
     
-    private int[] pngMap = Faces.getFace();
-
     public LED() {
       //All LED Setup:
 
-      // PWM port 9
+      // PWM port 0
       // Must be a PWM header, not MXP or DIO
       // AddressableLED m_led = new AddressableLED(8);
       //Why is this commented out?? ^
 
-
+      m_led = new AddressableLED(0);
       cur_x = 0;
       cur_y = 0;
       cur_index = 0;
@@ -44,10 +45,24 @@ public class LED {
           // Sets the specified LED to the RGB values for yellow
           m_ledBuffer.setRGB(i, 0, 0, 0);
         //  System.out.printf("%d of %d\n", i, LEDLength);
-         }
+      }
          
       m_led.setData(m_ledBuffer);
-      idx = 0;
+      
+      animations = new AnimationList();
+      System.out.printf("Number of animations: %d\n", animations.animations.size());
+      Iterator<String> it = animations.animations.keySet().iterator();
+      while(it.hasNext()) {
+        String name = it.next();
+        System.out.println(name);
+      }
+
+      setAnim("default_face");
+      if(getAnim() == null) {
+        System.out.printf("Default face is null\n");
+      } else {
+        System.out.printf("Default face has %d frames.\n", getAnim().frames.length);
+      }
     }
 
   public void LEDPeriodic() {
@@ -57,25 +72,55 @@ public class LED {
     final int NUM_ROWS = 16;
     final int NUM_COLS = 31;
 
-    for(int idx = 0; idx < pngMap.length/3; idx++) {
-      int col = (idx / 3) % NUM_ROWS;
-      int row = (idx / 3) / NUM_COLS;
+    tick++;
 
-      red = pngMap[3*idx];
-      green = pngMap[3*idx + 1];
-      blue = pngMap[3*idx+2];
+    if(tick % 5 == 0) {
+      Animation anim = getAnim();
+      if(anim == null)
+        return;
+      Frame frame = anim.periodic();
+      int pngMap[] = frame.rgb;
+      for(int x = 0; x<NUM_COLS; x++) {
+        for(int y = 0; y<NUM_ROWS; y++) {
+          int base = 3 * (x * NUM_ROWS + (15-y)); //flips upside down
+          
+          red = pngMap[base]/3;
+          green = pngMap[base+1]/3;
+          blue = pngMap[base+2]/3;
+          int led_idx = x * NUM_ROWS + y;
+          if( x % 2 == 1 ) {
+            led_idx = (x * NUM_ROWS + (NUM_ROWS - y - 1));
+          }
+          m_ledBuffer.setRGB(led_idx, red/2, green/2, blue/2);
+         /*  if(x == 16) {
+            System.out.printf("%d, %d = %d\n", x, y, led_idx);
+            m_ledBuffer.setRGB(led_idx, y*16, y*16, 255);
+          }*/
+          
+         // m_ledBuffer.setRGB(base/3, 8*x/3, 4*y/3, 127);
+        }
+      }
+      m_led.setData(m_ledBuffer);
+    }
+   // cur_index = 0;
+  }
+
+  public Animation getAnim() {
+    return cur_anim;
+  }
+
+  public void setAnim(Animation anim) {
       
-      if((row + 1) % 2 == 0){ //if it's even
-        int cur_index = 16 * (31-row) + col;
-        System.out.println("Even Index: " + cur_index);
-        m_ledBuffer.setRGB(cur_index*3, red, green , blue );
-      } else {
-        int cur_index = 16 * (31-row) + (15-col);
-        System.out.println("Odd Index: " + cur_index);
-        m_ledBuffer.setRGB(cur_index*3, red, green, blue );
+      cur_anim = anim;
+      anim.reset();
+  }
+
+  public void setAnim(String name) {
+    if(animations != null) {
+      Animation cur = animations.get(name);
+      if(cur != null) {
+        setAnim(cur);
       }
     }
-    m_led.setData(m_ledBuffer);
-   // cur_index = 0;
   }
 }
