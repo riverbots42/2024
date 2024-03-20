@@ -5,9 +5,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
-//import edu.wpi.first.math.filter.MedianFilter;
-//import edu.wpi.first.wpilibj.Ultrasonic;
-
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -48,7 +45,6 @@ public class Robot extends TimedRobot {
 
   final int FIRE_BUTTON = 10; // currently firebutton set to X (3). Set to 10 for Right Stick down
 
-
   final int LEFT_TRIGGER = 2;
   final int RIGHT_TRIGGER = 3;
 
@@ -68,19 +64,16 @@ public class Robot extends TimedRobot {
   int autoTick=0;
   int autoTickEnd=0;
 
-
   private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
   private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
   private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
   private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
-
  
   private int targetSwitch;
 
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
   PhotonCamera camera = new PhotonCamera(inst, "HD_USB_Camera 2"); 
   public LED led;
-
 
   double rotationSpeed;
   final double ANGULAR_P = 1;
@@ -100,9 +93,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-
-   //led = new LED();
-
    // start a NT4 client
    inst.startClient4("example client");
 
@@ -148,7 +138,6 @@ public class Robot extends TimedRobot {
     robotFieldPosition = pathChoice();
     
   }
-  //Upload??
   @Override
   public void teleopPeriodic() {
     winchControl();
@@ -198,8 +187,6 @@ public class Robot extends TimedRobot {
     if(hasTargets)
     {
       targetSwitch = 1;
-      //System.out.println("ID: " + result.getBestTarget().getFiducialId());
-      //System.out.println("YAW: " + result.getBestTarget().getYaw());
       rotationSpeed = -turnController.calculate(result.getBestTarget().getYaw(), 0.0); //has to be negative or we go backward
       if(rotationSpeed/100 < 0.3 && rotationSpeed/100 > -0.3)
       {
@@ -225,9 +212,6 @@ public class Robot extends TimedRobot {
       {
         endMethod = true;
       }
-      
-      //autonomousDrive.feed();
-      
     }
 
     else{
@@ -235,9 +219,7 @@ public class Robot extends TimedRobot {
       if(targetSwitch == 0)
         System.out.println("N/A");
         targetSwitch = 1;
-      }     
-    
-    
+      }
   }
 
   private void intakeSuckerMethod()
@@ -321,32 +303,10 @@ public class Robot extends TimedRobot {
   {
     double leftStickSpeed = negSquare(stick.getRawAxis(1));
     double rightStickSpeed = negSquare(stick.getRawAxis(5));
-    //Parabolic all going forwards
-    toggleTurbo = false;
     
     m_robotDrive.tankDrive(leftStickSpeed, rightStickSpeed);
-    /*
-    //Parabolic left back 
-    if(leftStickSpeed < 0)
-    {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed);
-    }
-    //Parabolic right back
-    else if(rightStickSpeed < 0)
-    {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed * -1);
-    }
-    //Parabolic all going backwards
-    else if(leftStickSpeed < 0 && rightStickSpeed < 0)
-    {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed * -1, rightStickSpeed * rightStickSpeed * -1);
-    }
-    else
-    {
-      m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed);
-    }
-    */
   }
+
   public void FIREINTHEHOLE()
   {
     System.out.println(fireTick);
