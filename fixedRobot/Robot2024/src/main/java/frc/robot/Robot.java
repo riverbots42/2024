@@ -152,9 +152,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     winchControl();
-    FIREINTHEHOLE();
     armControl();
     intakeSuckerMethod();
+    FIREINTHEHOLE(); //MUST be set after intakeSucker or the motor values will be overridden
     parabolicDrive();
     led.LEDPeriodic();
   }
@@ -251,11 +251,10 @@ public class Robot extends TimedRobot {
     {
       intakeSucker.set(VictorSPXControlMode.PercentOutput, 0.0);
     }
-    /*
     else if(stick.getRawButton(Y_BUTTON)) //Push out (edit if changed)
     {
       intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
-    }*/
+    }
     
     else if(sucking) //Suck in (edit if changed)
     {
@@ -310,22 +309,22 @@ public class Robot extends TimedRobot {
     }
   }
   
-  public static double negSquare(double in) {
+  public double negSquare(double in) {
     double out = in * in;
     if(in < 0 && out > 0) {
-      out = -in;
+      out = -out;
     }
     return out;
   }
 
   private void parabolicDrive()
   {
-    double leftStickSpeed = stick.getRawAxis(1);
-    double rightStickSpeed = stick.getRawAxis(5);
+    double leftStickSpeed = negSquare(stick.getRawAxis(1));
+    double rightStickSpeed = negSquare(stick.getRawAxis(5));
     //Parabolic all going forwards
     toggleTurbo = false;
     
-    m_robotDrive.tankDrive(negSquare(leftStickSpeed), negSquare(rightStickSpeed));
+    m_robotDrive.tankDrive(leftStickSpeed, rightStickSpeed);
     /*
     //Parabolic left back 
     if(leftStickSpeed < 0)
@@ -350,6 +349,7 @@ public class Robot extends TimedRobot {
   }
   public void FIREINTHEHOLE()
   {
+    System.out.println(fireTick);
     if(stick.getRawButton(B_BUTTON))
     {
       // set victor shooter motors to high
