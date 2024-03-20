@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
 public class LED {
-    public AddressableLED m_led = new AddressableLED(8);
+    public AddressableLED m_led;
     public  AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(512);
     int tick = 0;
     public AnimationList animations;
@@ -19,12 +19,12 @@ public class LED {
     public LED() {
       //All LED Setup:
 
-      // PWM port 9
+      // PWM port 0
       // Must be a PWM header, not MXP or DIO
       // AddressableLED m_led = new AddressableLED(8);
       //Why is this commented out?? ^
 
-
+      m_led = new AddressableLED(0);
       cur_x = 0;
       cur_y = 0;
       cur_index = 0;
@@ -82,7 +82,7 @@ public class LED {
       int pngMap[] = frame.rgb;
       for(int x = 0; x<NUM_COLS; x++) {
         for(int y = 0; y<NUM_ROWS; y++) {
-          int base = 3 * (x * NUM_ROWS + y);
+          int base = 3 * (x * NUM_ROWS + (15-y)); //flips upside down
           
           red = pngMap[base]/3;
           green = pngMap[base+1]/3;
@@ -110,6 +110,7 @@ public class LED {
   }
 
   public void setAnim(Animation anim) {
+      
       cur_anim = anim;
       anim.reset();
   }
