@@ -82,9 +82,9 @@ public class LED {
       return mapin;
     }
     // If we got here, then we're over the current budget.  Time to trim the fat.
-    double adjustmentFactor = 1.0 * totalCurrent / total;
+    double adjustmentFactor = 1.0 * MAX_CURRENT / totalCurrent;
     for(int i=0; i<mapin.length; i++) {
-      mapout[i] = (int) (adjustmentFactor * adjustmentFactor);
+      mapout[i] = (int) (mapin[i] * adjustmentFactor);
     }
     return mapout;
   }
