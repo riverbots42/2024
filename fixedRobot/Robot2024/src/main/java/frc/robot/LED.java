@@ -15,6 +15,9 @@ public class LED {
     public int cur_x;
     public int cur_y;
     public int cur_index;
+
+    // The maximum current we have at our disposal in milliamps
+    public final int MAX_CURRENT = 2500;
     
     public LED() {
       //All LED Setup:
@@ -65,6 +68,27 @@ public class LED {
       }
     }
 
+  // Make sure our request for power doesn't exceed the 2.5A budget.
+  // @param mapin the array of led values (all segments/colors as one string).
+  // @return the normalized (to 2.5A max) array of led values.
+  public int[] enforceCurrentBudget(int mapin[]) {
+    int mapout = new int[mapin.length];
+    int total = 0;
+    for(int i=0; i<mapin.length; i++) {
+      total += mapin[i];
+    }
+    double totalCurrent = 15.0 * total / 256;
+    if( totalCurrent <= MAX_CURRENT) {
+      return mapin;
+    }
+    // If we got here, then we're over the current budget.  Time to trim the fat.
+    double adjustmentFactor = 1.0 * MAX_CURRENT / totalCurrent;
+    for(int i=0; i<mapin.length; i++) {
+      mapout[i] = (int) (mapin[i] * adjustmentFactor);
+    }
+    return mapout;
+  }
+
   public void LEDPeriodic() {
     int red = 0;
     int green = 0;
@@ -79,7 +103,7 @@ public class LED {
       if(anim == null)
         return;
       Frame frame = anim.periodic();
-      int pngMap[] = frame.rgb;
+      int pngMap[] = enforceCurrentBudget(frame.rgb);
       for(int x = 0; x<NUM_COLS; x++) {
         for(int y = 0; y<NUM_ROWS; y++) {
           int base = 3 * (x * NUM_ROWS + (15-y)); //flips upside down
