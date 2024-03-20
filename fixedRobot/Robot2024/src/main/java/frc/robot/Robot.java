@@ -71,8 +71,7 @@ public class Robot extends TimedRobot {
   static int startTick=0;
   int autoTick=0;
   int autoTickEnd=0;
-
-<<<<<<< HEAD
+  
   private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
   private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
   private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
@@ -118,7 +117,7 @@ public class Robot extends TimedRobot {
     SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
     
     SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
-=======
+
     led = new LED();
     led.setAnim("spinning_ufo");
 
@@ -127,7 +126,6 @@ public class Robot extends TimedRobot {
     
     // SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
     // SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
->>>>>>> 12718aa (BJ LED Code)
 
     // m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
     stick = new Joystick(0);
@@ -164,12 +162,12 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     led.setAnim("default_face");
-  }
-
-
     robotFieldPosition = pathChoice();
-    
   }
+
+
+    
+    
   //Upload??
   @Override
   public void teleopPeriodic() {
@@ -205,10 +203,11 @@ public class Robot extends TimedRobot {
       case 2: //do something
         autonomousPathwayMiddlePosition();
         break;
-    //  case 3: //leave starting position
+       case 3: //leave starting position
         autonomousPathwayFarFromAmpPosition();
 
-       // break;}
+        break;
+      }
     autonomousDrive.feed();
     m_robotDrive.feed();
 
@@ -378,6 +377,7 @@ public class Robot extends TimedRobot {
 
   private int pathChoice()
   {
+
     int pathSelection = 0;
     if(pathSetterOne.get() && pathSetterTwo.get())
     {
