@@ -6,7 +6,7 @@ runtest:	Main.class AnimationList.java
 	cd test && javac *.java
 	cd test && mkdir -p frc/robot && mv *.class frc/robot && java frc.robot.Main
 
-AnimationList.java:	Main.class AnimationList.tmpl
+AnimationList.java:	Main.class AnimationList.tmpl $(wildcard */*.png)
 	java Main > $@
 
 Main.class:	Main.java

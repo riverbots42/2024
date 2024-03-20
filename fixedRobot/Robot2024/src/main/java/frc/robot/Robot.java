@@ -5,6 +5,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 //import edu.wpi.first.math.filter.MedianFilter;
 //import edu.wpi.first.wpilibj.Ultrasonic;
 
@@ -15,6 +19,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.Victor;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -66,6 +72,7 @@ public class Robot extends TimedRobot {
   int autoTick=0;
   int autoTickEnd=0;
 
+<<<<<<< HEAD
   private final CANSparkMax m_frontLeftMotor = new CANSparkMax(1, MotorType.kBrushed);
   private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
   private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
@@ -111,6 +118,16 @@ public class Robot extends TimedRobot {
     SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
     
     SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
+=======
+    led = new LED();
+    led.setAnim("spinning_ufo");
+
+    // m_frontLeftMotor.follow(m_rearLeftMotor);
+    // m_frontRightMotor.follow(m_rearRightMotor);
+    
+    // SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
+    // SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
+>>>>>>> 12718aa (BJ LED Code)
 
     // m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
     stick = new Joystick(0);
@@ -139,6 +156,7 @@ public class Robot extends TimedRobot {
     robotFieldPosition = pathChoice();
     
 
+
     robotFieldPosition = pathChoice();
     led.setAnim("notes_scroll");
   }
@@ -146,6 +164,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     led.setAnim("default_face");
+  }
+
+
+    robotFieldPosition = pathChoice();
+    
   }
   //Upload??
   @Override
@@ -170,13 +193,10 @@ public class Robot extends TimedRobot {
   public void stopRobot()
   {
     m_robotDrive.tankDrive(0, 0);
-  } 
-  public void autonomousPeriodic() 
-  {
-    
-   /*  switch(robotFieldPosition){
-
-       case 0: //do nothing
+  }
+  public void autonomousPeriodic() {
+    switch(robotFieldPosition){
+      case 0: //do nothing
         stopRobot();
         break;
       case 1: //score in amp, then drive outside of starting position
@@ -184,7 +204,7 @@ public class Robot extends TimedRobot {
         break;
       case 2: //do something
         autonomousPathwayMiddlePosition();
-        break; */
+        break;
     //  case 3: //leave starting position
         autonomousPathwayFarFromAmpPosition();
 
