@@ -96,6 +96,8 @@ public class Robot extends TimedRobot {
   final double FORWARD_POSITION = 240; //inches
   private int robotFieldPosition = 0;
 
+  public int fireTick = 0;
+
   @Override
   public void robotInit() {
 
@@ -113,15 +115,10 @@ public class Robot extends TimedRobot {
     m_frontRightMotor.follow(m_rearRightMotor);
     
     SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
-    
     SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
 
     led = new LED();
     led.setAnim("default_face");
-    
-    SendableRegistry.addChild(m_robotDrive, m_rearLeftMotor);
-    SendableRegistry.addChild(m_robotDrive, m_rearRightMotor);
-
 
     m_robotDrive = new DifferentialDrive(m_rearLeftMotor, m_rearRightMotor);
     stick = new Joystick(0);
@@ -154,15 +151,12 @@ public class Robot extends TimedRobot {
   //Upload??
   @Override
   public void teleopPeriodic() {
-    
     winchControl();
     FIREINTHEHOLE();
     armControl();
     intakeSuckerMethod();
     parabolicDrive();
     led.LEDPeriodic();
-    
-    
   }
 
   @Override
@@ -316,6 +310,14 @@ public class Robot extends TimedRobot {
     }
   }
   
+  public static double negSquare(double in) {
+    double out = in * in;
+    if(in < 0 && out > 0) {
+      out = -in;
+    }
+    return out;
+  }
+
   private void parabolicDrive()
   {
     double leftStickSpeed = stick.getRawAxis(1);
@@ -323,6 +325,8 @@ public class Robot extends TimedRobot {
     //Parabolic all going forwards
     toggleTurbo = false;
     
+    m_robotDrive.tankDrive(negSquare(leftStickSpeed), negSquare(rightStickSpeed));
+    /*
     //Parabolic left back 
     if(leftStickSpeed < 0)
     {
@@ -342,17 +346,23 @@ public class Robot extends TimedRobot {
     {
       m_robotDrive.tankDrive(leftStickSpeed * leftStickSpeed, rightStickSpeed * rightStickSpeed);
     }
+    */
   }
-  public static void FIREINTHEHOLE()
+  public void FIREINTHEHOLE()
   {
     if(stick.getRawButton(B_BUTTON))
     {
       // set victor shooter motors to high
       launcherLeft.set(TalonSRXControlMode.PercentOutput,-1);
       launcherRight.set(TalonSRXControlMode.PercentOutput,1);
-      intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
+      fireTick++;
+      if(fireTick == 50)
+        System.out.println("Firing!");
+      if(fireTick > 50)
+        intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
     }
     else{
+      fireTick = 0;
       launcherLeft.set(TalonSRXControlMode.PercentOutput, 0);
       launcherRight.set(TalonSRXControlMode.PercentOutput, 0);
       intakeSucker.set(VictorSPXControlMode.PercentOutput, 0);
