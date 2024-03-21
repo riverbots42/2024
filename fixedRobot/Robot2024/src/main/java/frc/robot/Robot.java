@@ -142,8 +142,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     winchControl();
     armControl();
-    intakeSuckerMethod();
-    FIREINTHEHOLE(); //MUST be set after intakeSucker or the motor values will be overridden
+    intakeSuckAndShoot(); //MUST be set after intakeSucker or the motor values will be overridden
     parabolicDrive();
     led.LEDPeriodic();
   }
@@ -222,29 +221,47 @@ public class Robot extends TimedRobot {
       }
   }
 
-  private void intakeSuckerMethod()
+  private void intakeSuckAndShoot()
   {
-    if(stick.getRawButtonPressed(A_BUTTON))
+    if(stick.getRawButton(B_BUTTON))
     {
-      sucking = !sucking;
+      // set victor shooter motors to high
+      launcherLeft.set(TalonSRXControlMode.PercentOutput,-1);
+      launcherRight.set(TalonSRXControlMode.PercentOutput,1);
+      fireTick++;
+      if(fireTick == 50)
+        System.out.println("Firing!");
+      if(fireTick > 50)
+        intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
     }
+    else{
+      fireTick = 0;
+      launcherLeft.set(TalonSRXControlMode.PercentOutput, 0);
+      launcherRight.set(TalonSRXControlMode.PercentOutput, 0);
+      intakeSucker.set(VictorSPXControlMode.PercentOutput, 0);
+      fireTick = 0;
+      if(stick.getRawButtonPressed(A_BUTTON))
+      {
+        sucking = !sucking;
+      }
 
-    if(stick.getRawButton(Y_BUTTON) && stick.getRawButton(A_BUTTON)) //If both pressed do nothing
-    {
-      intakeSucker.set(VictorSPXControlMode.PercentOutput, 0.0);
-    }
-    else if(stick.getRawButton(Y_BUTTON)) //Push out (edit if changed)
-    {
-      intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
-    }
-    
-    else if(sucking) //Suck in (edit if changed)
-    {
-      intakeSucker.set(VictorSPXControlMode.PercentOutput, 1.0);
-    }
-    else //turn off
-    {
-      intakeSucker.set(VictorSPXControlMode.PercentOutput, 0.0);
+      if(stick.getRawButton(Y_BUTTON) && stick.getRawButton(A_BUTTON)) //If both pressed do nothing
+      {
+        intakeSucker.set(VictorSPXControlMode.PercentOutput, 0.0);
+      }
+      else if(stick.getRawButton(Y_BUTTON)) //Push out (edit if changed)
+      {
+        intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
+      }
+      
+      else if(sucking) //Suck in (edit if changed)
+      {
+        intakeSucker.set(VictorSPXControlMode.PercentOutput, 1.0);
+      }
+      else //turn off
+      {
+        intakeSucker.set(VictorSPXControlMode.PercentOutput, 0.0);
+      }
     }
   }
 
@@ -303,30 +320,15 @@ public class Robot extends TimedRobot {
   {
     double leftStickSpeed = negSquare(stick.getRawAxis(1));
     double rightStickSpeed = negSquare(stick.getRawAxis(5));
-    
-    m_robotDrive.tankDrive(leftStickSpeed, rightStickSpeed);
-  }
-
-  public void FIREINTHEHOLE()
-  {
-    System.out.println(fireTick);
-    if(stick.getRawButton(B_BUTTON))
+    if(leftStickSpeed - rightStickSpeed < 0)
     {
-      // set victor shooter motors to high
-      launcherLeft.set(TalonSRXControlMode.PercentOutput,-1);
-      launcherRight.set(TalonSRXControlMode.PercentOutput,1);
-      fireTick++;
-      if(fireTick == 50)
-        System.out.println("Firing!");
-      if(fireTick > 50)
-        intakeSucker.set(VictorSPXControlMode.PercentOutput, -1);
+      led.setAnim("left");
     }
-    else{
-      fireTick = 0;
-      launcherLeft.set(TalonSRXControlMode.PercentOutput, 0);
-      launcherRight.set(TalonSRXControlMode.PercentOutput, 0);
-      intakeSucker.set(VictorSPXControlMode.PercentOutput, 0);
+    else if(leftStickSpeed - rightStickSpeed > 0)
+    {
+      led.setAnim("right");
     }
+    m_robotDrive.tankDrive(leftStickSpeed, rightStickSpeed);
   }
 
   private int pathChoice()
