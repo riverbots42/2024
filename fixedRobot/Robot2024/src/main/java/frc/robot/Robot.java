@@ -37,8 +37,8 @@ public class Robot extends TimedRobot {
 
   //Controller must be set to "X" mode rather than "D" on the back
   final int A_BUTTON = 1;
-  final static int B_BUTTON = 2;
-  final int X_BUTTON = 3;
+  final static int FIRE_B_BUTTON = 2;
+  final int NITRO_X_BUTTON = 3;
   final int Y_BUTTON = 4;
   final int LEFT_BUMPER = 5;
   final int RIGHT_BUMPER = 6;
@@ -51,6 +51,7 @@ public class Robot extends TimedRobot {
   boolean toggleTurbo = false;
   boolean endMethod = false;
   boolean sucking = false;
+  boolean isTurbo = false;
 
   VictorSPX winchAscender = new VictorSPX(5);
   VictorSPX arm2 = new VictorSPX(6);
@@ -68,6 +69,8 @@ public class Robot extends TimedRobot {
   private final CANSparkMax m_rearLeftMotor = new CANSparkMax(2, MotorType.kBrushed);
   private final CANSparkMax m_frontRightMotor = new CANSparkMax(3, MotorType.kBrushed);
   private final CANSparkMax m_rearRightMotor = new CANSparkMax(4, MotorType.kBrushed);
+
+  private double robotSpeedMultiplier = 0;
  
   private int targetSwitch;
 
@@ -223,11 +226,11 @@ public class Robot extends TimedRobot {
 
   private void intakeSuckAndShoot()
   {
-    if(stick.getRawButton(B_BUTTON))
+    if(stick.getRawButton(FIRE_B_BUTTON))
     {
       // set victor shooter motors to high
-      launcherLeft.set(TalonSRXControlMode.PercentOutput,-1);
-      launcherRight.set(TalonSRXControlMode.PercentOutput,1);
+      launcherLeft.set(TalonSRXControlMode.PercentOutput,-.75);
+      launcherRight.set(TalonSRXControlMode.PercentOutput,.75);
       fireTick++;
       if(fireTick == 50)
         System.out.println("Firing!");
@@ -318,8 +321,22 @@ public class Robot extends TimedRobot {
 
   private void parabolicDrive()
   {
-    double leftStickSpeed = negSquare(stick.getRawAxis(1));
-    double rightStickSpeed = negSquare(stick.getRawAxis(5));
+    if(stick.getRawButtonPressed(NITRO_X_BUTTON))
+    {
+      isTurbo = !isTurbo;
+    }
+    if(isTurbo)
+    {
+      robotSpeedMultiplier = 1;
+    }
+    else
+    {
+      robotSpeedMultiplier = 0.65;
+    }
+
+    double leftStickSpeed = negSquare(stick.getRawAxis(1) * robotSpeedMultiplier);
+    double rightStickSpeed = negSquare(stick.getRawAxis(5) * robotSpeedMultiplier);
+
     if(leftStickSpeed - rightStickSpeed < 0)
     {
       led.setAnim("left");
