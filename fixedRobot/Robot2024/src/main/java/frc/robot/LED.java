@@ -72,7 +72,7 @@ public class LED {
   // @param mapin the array of led values (all segments/colors as one string).
   // @return the normalized (to 2.5A max) array of led values.
   public int[] enforceCurrentBudget(int mapin[]) {
-    int mapout = new int[mapin.length];
+    int[] mapout = new int[mapin.length];
     int total = 0;
     for(int i=0; i<mapin.length; i++) {
       total += mapin[i];
